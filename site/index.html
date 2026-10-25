@@ -1,35 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fennick's Addons: free add-ons for WoW Forever</title>
-<meta name="description" content="Fennick's Beast Core and modules: Guidepost, Rest, Reputation and Merchant's Favor. Free add-ons for WoW Forever.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<title>Fennick's Addons: free WoW Forever leveling guide and add-ons</title>
+<meta name="description" content="Free WoW Forever leveling guide: Fennick's Guidepost routes every race and class from 1 to 60 with PvE, Hardcore and PvP rulesets, plus add-ons for rested XP, reputation and Merchant's Favor.">
+<link rel="canonical" href="https://fennickaddons.dev/">
+<meta name="theme-color" content="#08343C">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fennick's Addons">
+<meta property="og:title" content="Fennick's Addons: free WoW Forever leveling guide and add-ons">
+<meta property="og:description" content="A free 1-60 leveling guide for every race and class, with PvE, Hardcore and PvP rulesets, plus rested XP, reputation and Merchant's Favor helpers.">
+<meta property="og:url" content="https://fennickaddons.dev/">
+<meta property="og:image" content="https://fennickaddons.dev/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Fennick's Addons banner with the fennec fox emblem">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fennick's Addons: free WoW Forever leveling guide and add-ons">
+<meta name="twitter:description" content="A free 1-60 leveling guide for every race and class, with PvE, Hardcore and PvP rulesets, plus rested XP, reputation and Merchant's Favor helpers.">
+<meta name="twitter:image" content="https://fennickaddons.dev/assets/og-image.png">
+<link rel="preload" href="/assets/fonts/Cinzel-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <main class="panel">
   <header>
-    <!-- Suite banner from Artzy goes here; if it includes the title text, remove the h1 below -->
-    <h1>Fennick's Addons</h1>
-    <p class="tag">Free add-ons for WoW Forever. One step at a time, out of your way.</p>
+    <picture>
+      <source srcset="/assets/banner.webp" type="image/webp">
+      <img class="banner" src="/assets/banner.png" alt="Fennick's Addons banner with the fennec fox emblem" width="1500" height="500">
+    </picture>
+    <h1 class="sr-only">Fennick's Addons</h1>
+    <p class="sub">Free add-ons for WoW Forever. Fennick's Guidepost is a stand-alone 1-60 leveling guide for every race and class, with PvE, Hardcore and PvP rulesets, plus helpers for rested XP, reputation and Merchant's Favor.</p>
+    <p class="tag">Free and always will be. One step at a time, out of your way.</p>
   </header>
 
   <section>
     <h2>Download</h2>
-    <p>Get the <strong>install-all bundle</strong> (Core, Guidepost, Rest, Reputation and Merchant's Favor) or single add-ons from the releases page. Unzip into <code>Interface/AddOns/</code>.</p>
-    <p><a class="btn" href="https://github.com/Dagodeiwos/fennick-releases/releases/latest">Latest release</a>
-       <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/releases">All releases</a></p>
+    <p><a class="btn btn-big" href="https://github.com/Dagodeiwos/fennick-releases/releases/download/suite-core1.4.1-gp4.4.2-rest1.2.2/Fennick-Suite-Install-All-core1.4.1-gp4.4.2-rest1.2.2.zip">Download the install-all bundle</a></p>
+    <p class="meta">Core 1.4.1, Guidepost 4.4.2, Rest 1.2.2, Reputation 1.2.1, Merchant's Favor 1.2.1. Zip, 1.1 MB. Released Oct 25, 2026.</p>
+    <ol class="steps">
+      <li>Download the install-all bundle above, or single add-ons from <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/releases">all releases</a>.</li>
+      <li>Unzip it into your game's <code>Interface/AddOns/</code> folder, so each <code>Fennick_...</code> folder sits directly inside <code>AddOns</code>.</li>
+      <li>Restart the game and check the Fennick add-ons are enabled in the AddOns list at character select.</li>
+    </ol>
+    <p class="note"><strong>Fennick's Beast Core is required</strong> by every module. Add any mix of the others.</p>
     <ul class="mods">
-      <li><img src="assets/BeastCore-64.png" alt="" width="32" height="32"><span>Fennick's Beast Core</span> required; the arrow, look and monster tooltip</li>
-      <li><img src="assets/Guidepost-64.png" alt="" width="32" height="32"><span>Fennick's Guidepost</span> stand-alone leveling routes</li>
-      <li><img src="assets/Rest-64.png" alt="" width="32" height="32"><span>Rest</span> rested XP and friendly inns</li>
-      <li><img src="assets/Reputation-64.png" alt="" width="32" height="32"><span>Reputation</span> turn-ins you can do from your bags</li>
-      <li><img src="assets/MerchantsFavor-64.png" alt="" width="32" height="32"><span>Merchant's Favor</span> Forever writs and favor</li>
+      <li><img src="/assets/BeastCore-32.png" srcset="/assets/BeastCore-32.png 1x, /assets/BeastCore-64.png 2x" alt="Beast Core icon" width="32" height="32"><div><span class="name">Fennick's Beast Core</span> <span class="badge req">Required</span> <span class="ver">1.4.1</span><br>One window, one waypoint arrow, shared settings and a combat-safe monster tooltip for every module.</div></li>
+      <li><img src="/assets/Guidepost-32.png" srcset="/assets/Guidepost-32.png 1x, /assets/Guidepost-64.png 2x" alt="Guidepost icon" width="32" height="32"><div><span class="name">Fennick's Guidepost</span> <span class="badge">Optional</span> <span class="ver">4.4.2</span><br>A stand-alone 1-60 leveling guide for every race and class, with PvE, Hardcore and PvP rulesets. No RXPGuides needed.</div></li>
+      <li><img src="/assets/Rest-32.png" srcset="/assets/Rest-32.png 1x, /assets/Rest-64.png 2x" alt="Rest icon" width="32" height="32"><div><span class="name">Fennick Rest</span> <span class="badge">Optional</span> <span class="ver">1.2.2</span><br>Your rested XP, how long until it's full, and the best friendly place to log out.</div></li>
+      <li><img src="/assets/Reputation-32.png" srcset="/assets/Reputation-32.png 1x, /assets/Reputation-64.png 2x" alt="Reputation icon" width="32" height="32"><div><span class="name">Fennick Reputation</span> <span class="badge">Optional</span> <span class="ver">1.2.1</span><br>Shows the reputation turn-ins you can hand in right now with what's already in your bags.</div></li>
+      <li><img src="/assets/MerchantsFavor-32.png" srcset="/assets/MerchantsFavor-32.png 1x, /assets/MerchantsFavor-64.png 2x" alt="Merchant's Favor icon" width="32" height="32"><div><span class="name">Fennick Merchant's Favor</span> <span class="badge">Optional</span> <span class="ver">1.2.1</span><br>Tracks the Forever Merchant's Favor crates, writs and labels in your bags from start to turn-in.</div></li>
     </ul>
-    <p class="note">Playtesters: Fox Trials is a separate tester-only download on the same page.</p>
+    <p class="note">For playtesters: Fennick's Fox Trials is an optional in-game checklist for people helping test Fennick, with results you can copy as text. It's a separate download on the releases page; regular players don't need it.</p>
   </section>
 
   <section>
@@ -37,20 +63,26 @@
     <p>Every change, newest first: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/blob/main/CHANGELOG.md">CHANGELOG.md</a>. Each release also lists its own notes.</p>
   </section>
 
+  <!--
   <section>
     <h2>Support Fennick</h2>
-    <p>Fennick is free and always will be. Donations are optional and unlock nothing.</p>
-    <!-- Ko-fi is live. GitHub Sponsors button is hidden until that account exists; uncomment it then. -->
-    <p><a class="btn" href="https://ko-fi.com/J5M529GC4X" target="_blank" rel="noopener">Support on Ko-fi</a>
-       <!-- <a class="btn" href="https://github.com/sponsors/Dagodeiwos" target="_blank" rel="noopener">GitHub Sponsors</a> --></p>
+    <p>Donations are optional and unlock nothing.</p>
+    <p><a class="btn" href="https://ko-fi.com/J5M529GC4X" target="_blank" rel="noopener">Support on Ko-fi<span class="sr-only"> (opens in a new tab)</span></a>
+       <a class="btn" href="https://github.com/sponsors/Dagodeiwos" target="_blank" rel="noopener">GitHub Sponsors<span class="sr-only"> (opens in a new tab)</span></a></p>
   </section>
+  -->
 
   <section>
     <h2>Bugs and help</h2>
     <p>Email <a class="link" href="mailto:fennick@fennickaddons.dev">fennick@fennickaddons.dev</a> or open a <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/issues/new/choose">bug report</a>. Include the add-on, version, class and level, and the steps. In game, <code>/fennick help</code> shows the address and <code>/fennick debuglog</code> gives a log you can paste.</p>
   </section>
 
-  <footer>Not affiliated with Blizzard Entertainment. Licence: PolyForm Noncommercial 1.0.0.</footer>
+  <footer>
+    <p>Fennick's Addons is a fan project, not affiliated with or endorsed by Blizzard Entertainment. World of Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc.</p>
+    <p>License: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/blob/main/LICENSE.md">PolyForm Noncommercial 1.0.0</a>. In plain words: free to download and use, for noncommercial purposes only; nobody may sell it.</p>
+    <p>Cinzel font by the Cinzel Project Authors, <a class="link" href="/assets/fonts/OFL.txt">SIL Open Font License 1.1</a>.</p>
+    <p>Last updated: Oct 25, 2026.</p>
+  </footer>
 </main>
 </body>
 </html>

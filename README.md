@@ -18,8 +18,8 @@ See [CHANGELOG.md](CHANGELOG.md) and each release's notes.
 Email **fennick@fennickaddons.dev** or [open a bug report](https://github.com/Dagodeiwos/fennick-releases/issues/new/choose).
 
 ## Donate
-Fennick is free; donations are optional and unlock nothing.
-[Ko-fi](https://ko-fi.com/J5M529GC4X) · [GitHub Sponsors](https://github.com/sponsors/Dagodeiwos) (GitHub Sponsors coming soon).
+Fennick is free and always will be.
+Donations: not yet open (pending approval).
 
 ## License
 License: PolyForm Noncommercial 1.0.0 (see [LICENSE.md](LICENSE.md)).
