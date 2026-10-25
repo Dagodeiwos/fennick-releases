@@ -2,5 +2,9 @@
   // Cloudflare Workers static assets: serves ./site (no build step)
   "name": "fennick-releases",
   "compatibility_date": "2026-10-01",
-  "assets": { "directory": "./site" }
+  "assets": { "directory": "./site" },
+  "routes": [
+    { "pattern": "fennickaddons.dev", "custom_domain": true },
+    { "pattern": "www.fennickaddons.dev", "custom_domain": true }
+  ]
 }
