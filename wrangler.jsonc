@@ -1,0 +1,6 @@
+{
+  // Cloudflare Workers static assets: serves ./site (no build step)
+  "name": "fennick-releases",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./site" }
+}
