@@ -22,4 +22,4 @@ Fennick is free; donations are optional and unlock nothing.
 [Ko-fi](https://ko-fi.com/TBD) · [GitHub Sponsors](https://github.com/sponsors/Dagodeiwos) — placeholder until the author creates the account.
 
 ## License
-License: to be confirmed.
+License: PolyForm Noncommercial 1.0.0 (see [LICENSE.md](LICENSE.md)).
