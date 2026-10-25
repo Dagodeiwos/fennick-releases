@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-25 In-game icons (Core 1.4.1, Guidepost 4.4.2, Rest 1.2.2, Reputation 1.2.1, Merchant's Favor 1.2.1)
+The author (2026-10-25): "Add the in-game logos that artzy made to the appropriate addons." Cosmetic only, no new features.
+- New Artzy icons (fennec fox on a teal tile, gold rim, add-on emblem) as the 32px window-header icon. A 64x64 TGA is used so WoW scales it down.
+- Rest, Reputation and Merchant's Favor now ship their own `Media/` icon. Core keeps matching copies as a fallback.
+- `## IconTexture` added to each changed .toc, so the icon shows in the AddOns list where the client supports it.
+- Core 1.4.1 also ships the support line already in source (fennick@fennickaddons.dev in `/fennick help`).
+- Fox Trials is unchanged (1.2.1).
+
 ## 2026-10-25 Support address, landing page, bug form, launch dates (docs/site only)
 - Support and bug reports: fennick@fennickaddons.dev (README, DESCRIPTIONS, `/fennick help` line in all 10 languages; source only, ships with the next Core release).
 - `site/`: static landing page for fennickaddons.dev (downloads, changelog, donation placeholder), using Artzy's icons; hosting steps in site/README.md.
