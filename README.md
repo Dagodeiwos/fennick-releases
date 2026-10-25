@@ -19,7 +19,7 @@ Email **fennick@fennickaddons.dev** or [open a bug report](https://github.com/Da
 
 ## Donate
 Fennick is free; donations are optional and unlock nothing.
-[Ko-fi](https://ko-fi.com/TBD) · [GitHub Sponsors](https://github.com/sponsors/Dagodeiwos) — placeholder until the author creates the account.
+[Ko-fi](https://ko-fi.com/J5M529GC4X) · [GitHub Sponsors](https://github.com/sponsors/Dagodeiwos) (GitHub Sponsors coming soon).
 
 ## License
 License: PolyForm Noncommercial 1.0.0 (see [LICENSE.md](LICENSE.md)).
