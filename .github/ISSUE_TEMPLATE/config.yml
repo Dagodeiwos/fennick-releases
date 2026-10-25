@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Email support
+    url: mailto:fennick@fennickaddons.dev
+    about: Prefer email? Write to fennick@fennickaddons.dev.
+  - name: Downloads and changelog
+    url: https://github.com/Dagodeiwos/fennick-releases/releases
+    about: Latest Fennick release zips and notes.
