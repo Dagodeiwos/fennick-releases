@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://fennickaddons.dev/</loc><lastmod>2026-10-25</lastmod></url>
+  <url><loc>https://fennickaddons.dev/</loc><lastmod>2026-10-27</lastmod></url>
+  <url><loc>https://fennickaddons.dev/addons/beast-core.html</loc><lastmod>2026-10-27</lastmod></url>
+  <url><loc>https://fennickaddons.dev/addons/guidepost.html</loc><lastmod>2026-10-27</lastmod></url>
+  <url><loc>https://fennickaddons.dev/addons/rest.html</loc><lastmod>2026-10-27</lastmod></url>
+  <url><loc>https://fennickaddons.dev/addons/reputation.html</loc><lastmod>2026-10-27</lastmod></url>
+  <url><loc>https://fennickaddons.dev/addons/merchants-favor.html</loc><lastmod>2026-10-27</lastmod></url>
+  <url><loc>https://fennickaddons.dev/addons/trailmarks.html</loc><lastmod>2026-10-27</lastmod></url>
+  <url><loc>https://fennickaddons.dev/addons/cartographer.html</loc><lastmod>2026-10-27</lastmod></url>
 </urlset>

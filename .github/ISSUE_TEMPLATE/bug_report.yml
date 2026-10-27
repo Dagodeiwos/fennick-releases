@@ -1,57 +1,29 @@
 name: Bug report
-description: Something in a Fennick add-on is wrong or broken.
+description: Report a problem with a Fennick add-on
 title: "[Bug] "
 labels: ["bug"]
 body:
-  - type: markdown
-    attributes:
-      value: "Thanks for helping. You can also email fennick@fennickaddons.dev."
   - type: dropdown
     id: addon
     attributes:
       label: Add-on
-      options: ["Core", "Guidepost", "Rest", "Reputation", "Merchant's Favor", "Fox Trials"]
-    validations:
-      required: true
+      options: ["Core", "Guidepost", "Rest", "Reputation", "Merchant's Favor", "Trailmarks", "Cartographer"]
+    validations: {required: true}
   - type: input
     id: version
-    attributes:
-      label: Add-on version
-      description: Shown in the AddOns list or the zip name, e.g. 4.4.1.
-    validations:
-      required: true
+    attributes: {label: Version, placeholder: "e.g. 1.5.1"}
+    validations: {required: true}
   - type: input
-    id: character
-    attributes:
-      label: Class and level
-      placeholder: "Tauren Shaman, level 23"
-    validations:
-      required: true
+    id: language
+    attributes: {label: Client language, placeholder: "e.g. enUS, deDE"}
+    validations: {required: true}
   - type: textarea
     id: steps
-    attributes:
-      label: Steps to reproduce
-      placeholder: "1. ...\n2. ...\n3. ..."
-    validations:
-      required: true
+    attributes: {label: Steps to reproduce, placeholder: "1. ...\n2. ...\n3. ..."}
+    validations: {required: true}
   - type: textarea
-    id: expected
+    id: error
     attributes:
-      label: Expected
-    validations:
-      required: true
-  - type: textarea
-    id: actual
-    attributes:
-      label: Actual
-      description: What happened instead. Paste any Lua error text here.
-    validations:
-      required: true
-  - type: textarea
-    id: debug
-    attributes:
-      label: Debug log (optional)
-      description: "If available: turn on the Guidepost setting 'Debug log', then paste the output of /fennick debuglog. Core alone has no log; /fennick debug only turns on chat debug lines."
+      label: Error text
+      description: Type /console scriptErrors 1 in chat, reproduce the problem, then paste the error here.
       render: text
-    validations:
-      required: false
