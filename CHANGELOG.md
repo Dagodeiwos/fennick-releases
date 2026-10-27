@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-27 Fennick's Cartographer 1.0.0 (new, optional), Core 1.5.0, Guidepost 4.5.2, Rest 1.2.3, Reputation 1.2.2, Merchant's Favor 1.2.2, Fox Trials 1.5.0
+- Cartographer: detailed world map (drag, wheel zoom, zone drill-down, coordinates, party, compass) and a square minimap (round as a setting). Flight paths, ships, zeppelins and the tram as route lines; "How do I get there?" trips using your known flight points. Per-map icon filters (including every Trailmarks type), pins with any of 50 icons, copy-only pin sharing. Off gives Blizzard's map back.
+- Core 1.5.0: map pin broker; Guidepost, Rest, Reputation and Merchant's Favor pins show on Cartographer first, then Blizzard.
+- Fox Trials 1.5.0: five Cartographer checks (62 total). Install-All now includes Cartographer (optional).
+
 ## 2026-10-27 Fennick's Trailmarks 1.0.0 (new, optional), Guidepost 4.5.1, Fox Trials 1.4.0
 - Trailmarks records where you find ore (13 kinds), herbs (28 kinds), treasure chests, quest mobs, quest objects and quest givers, and pins them on the world map and minimap. Busy spots show as shaded zone areas. Separate filters for the world map and minimap, icon size per map, "Share my finds" copy text (no import). Works with Fennick's Cartographer when installed.
 - Guidepost 4.5.1: hunting loops use your Trailmarks finds when there are enough.
