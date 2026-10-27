@@ -1,0 +1,423 @@
+{
+ "trailmarks": [
+  {
+   "kind": "area",
+   "xy": [
+    200,
+    290
+   ],
+   "terrain": "land",
+   "label": "shaded area (6+ quest-target finds)",
+   "r": 60
+  },
+  {
+   "kind": "icon",
+   "icon": "ore_copper",
+   "xy": [
+    90,
+    110
+   ],
+   "terrain": "land",
+   "label": "Copper ore node",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "ore_tin",
+   "xy": [
+    250,
+    90
+   ],
+   "terrain": "land",
+   "label": "Tin ore node",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "herb_peacebloom",
+   "xy": [
+    150,
+    420
+   ],
+   "terrain": "land",
+   "label": "Peacebloom",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "herb_silverleaf",
+   "xy": [
+    320,
+    410
+   ],
+   "terrain": "land",
+   "label": "Silverleaf",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "herb_earthroot",
+   "xy": [
+    470,
+    330
+   ],
+   "terrain": "land",
+   "label": "Earthroot",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "herb_stranglekelp",
+   "xy": [
+    440,
+    110
+   ],
+   "terrain": "water",
+   "label": "Stranglekelp (grows in water)",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "chest",
+   "xy": [
+    60,
+    300
+   ],
+   "terrain": "land",
+   "label": "Treasure chest",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "quest",
+   "xy": [
+    170,
+    270
+   ],
+   "terrain": "land",
+   "label": "Quest target",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "quest",
+   "xy": [
+    230,
+    320
+   ],
+   "terrain": "land",
+   "label": "Quest target",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "quest",
+   "xy": [
+    200,
+    300
+   ],
+   "terrain": "land",
+   "label": "Quest target",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "quest",
+   "xy": [
+    150,
+    300
+   ],
+   "terrain": "land",
+   "label": "Quest target",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "quest",
+   "xy": [
+    260,
+    280
+   ],
+   "terrain": "land",
+   "label": "Quest target",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "quest",
+   "xy": [
+    190,
+    335
+   ],
+   "terrain": "land",
+   "label": "Quest target",
+   "size": 32
+  },
+  {
+   "kind": "icon",
+   "icon": "user",
+   "xy": [
+    520,
+    420
+   ],
+   "terrain": "land",
+   "label": "Quest giver (npc kind uses the user pin)",
+   "size": 32
+  }
+ ],
+ "cartographer": [
+  {
+   "kind": "tower",
+   "xy": [
+    150,
+    90
+   ],
+   "terrain": "land",
+   "label": "West zeppelin tower",
+   "r": 6
+  },
+  {
+   "kind": "tower",
+   "xy": [
+    470,
+    110
+   ],
+   "terrain": "land",
+   "label": "East zeppelin tower",
+   "r": 6
+  },
+  {
+   "kind": "pier",
+   "xy": [
+    246,
+    250
+   ],
+   "terrain": "coast",
+   "label": "West pier"
+  },
+  {
+   "kind": "pier",
+   "xy": [
+    368,
+    320
+   ],
+   "terrain": "coast",
+   "label": "East pier"
+  },
+  {
+   "kind": "route",
+   "pts": [
+    [
+     80,
+     130
+    ],
+    [
+     140,
+     400
+    ]
+   ],
+   "terrain": "land-route",
+   "label": "West flight path",
+   "from": [
+    80,
+    130
+   ],
+   "to": [
+    140,
+    400
+   ]
+  },
+  {
+   "kind": "route",
+   "pts": [
+    [
+     500,
+     300
+    ],
+    [
+     520,
+     420
+    ]
+   ],
+   "terrain": "land-route",
+   "label": "East flight path",
+   "from": [
+    500,
+    300
+   ],
+   "to": [
+    520,
+    420
+   ]
+  },
+  {
+   "kind": "route",
+   "pts": [
+    [
+     80,
+     130
+    ],
+    [
+     140,
+     400
+    ]
+   ],
+   "terrain": "flight-ends",
+   "label": "West flight path ends",
+   "from": [
+    80,
+    130
+   ],
+   "to": [
+    140,
+    400
+   ]
+  },
+  {
+   "kind": "route",
+   "pts": [
+    [
+     500,
+     300
+    ],
+    [
+     520,
+     420
+    ]
+   ],
+   "terrain": "flight-ends",
+   "label": "East flight path ends",
+   "from": [
+    500,
+    300
+   ],
+   "to": [
+    520,
+    420
+   ]
+  },
+  {
+   "kind": "route",
+   "pts": [
+    [
+     246,
+     250
+    ],
+    [
+     368,
+     320
+    ]
+   ],
+   "terrain": "water-route",
+   "label": "Ship route",
+   "from": [
+    246,
+    250
+   ],
+   "to": [
+    368,
+    320
+   ]
+  },
+  {
+   "kind": "route",
+   "pts": [
+    [
+     150,
+     90
+    ],
+    [
+     470,
+     110
+    ]
+   ],
+   "terrain": "tower-route",
+   "label": "Zeppelin route",
+   "from": [
+    150,
+    90
+   ],
+   "to": [
+    470,
+    110
+   ]
+  },
+  {
+   "kind": "icon",
+   "icon": "flight",
+   "xy": [
+    80,
+    130
+   ],
+   "terrain": "land",
+   "label": "Flight master",
+   "size": 30
+  },
+  {
+   "kind": "icon",
+   "icon": "flight",
+   "xy": [
+    140,
+    400
+   ],
+   "terrain": "land",
+   "label": "Flight master",
+   "size": 30
+  },
+  {
+   "kind": "icon",
+   "icon": "flight",
+   "xy": [
+    500,
+    300
+   ],
+   "terrain": "land",
+   "label": "Flight master",
+   "size": 30
+  },
+  {
+   "kind": "icon",
+   "icon": "flight",
+   "xy": [
+    520,
+    420
+   ],
+   "terrain": "land",
+   "label": "Flight master",
+   "size": 30
+  },
+  {
+   "kind": "icon",
+   "icon": "ship",
+   "xy": [
+    307,
+    285
+   ],
+   "terrain": "ship",
+   "label": "Ship on its route",
+   "size": 34
+  },
+  {
+   "kind": "icon",
+   "icon": "zeppelin",
+   "xy": [
+    310,
+    100
+   ],
+   "terrain": "air",
+   "label": "Zeppelin in the air on its route",
+   "size": 34
+  },
+  {
+   "kind": "icon",
+   "icon": "user",
+   "xy": [
+    110,
+    260
+   ],
+   "terrain": "land",
+   "label": "Your pin",
+   "size": 30
+  }
+ ]
+}
