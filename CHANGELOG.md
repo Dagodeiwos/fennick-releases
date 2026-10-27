@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 2026-10-27 Questie optional (Guidepost 4.5.0)
+- Guidepost: no Questie dependency. Blizzard quest log, tracking and map by default; Questie only through an optional, off-by-default setting with automatic fallback. No Questie code or data shipped. Other modules unchanged.
+
 ## 2026-10-27 Fox Trials 1.3.0: datamine hidden-data checks
 The author (2026-10-27): "Add the check to Fox Trials" (the in-game checks from the datamine obfuscation assessment).
 - 3 new high-impact checks (54 total): PVP-ALL-11 server-side tuning on a target dummy, PVP-ALL-12 hidden talents or Legacy perks, REP-06 server-only item-started quests.
