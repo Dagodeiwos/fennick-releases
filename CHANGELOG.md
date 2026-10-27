@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-27 Fox Trials 1.3.0: datamine hidden-data checks
+The author (2026-10-27): "Add the check to Fox Trials" (the in-game checks from the datamine obfuscation assessment).
+- 3 new high-impact checks (54 total): PVP-ALL-11 server-side tuning on a target dummy, PVP-ALL-12 hidden talents or Legacy perks, REP-06 server-only item-started quests.
+- Minor, IN-GAME-CHECKS.md only: LVL-16 no test/placeholder entries, LVL-17 optional discovery (Manor Mistmantle, hidden portals), FAV-06 hidden items fill in.
+- Code review: Reputation lists only a fixed set of 15 real factions (test factions excluded); the flight network drops the placeholder node and test maps never reach Guidepost. No bug found.
+- Other add-ons and the install-all bundle are unchanged.
+
 ## 2026-10-25 In-game icons (Core 1.4.1, Guidepost 4.4.2, Rest 1.2.2, Reputation 1.2.1, Merchant's Favor 1.2.1)
 The author (2026-10-25): "Add the in-game logos that artzy made to the appropriate addons." Cosmetic only, no new features.
 - New Artzy icons (fennec fox on a teal tile, gold rim, add-on emblem) as the 32px window-header icon. A 64x64 TGA is used so WoW scales it down.
