@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-27 Fennick's Trailmarks 1.0.0 (new, optional), Guidepost 4.5.1, Fox Trials 1.4.0
+- Trailmarks records where you find ore (13 kinds), herbs (28 kinds), treasure chests, quest mobs, quest objects and quest givers, and pins them on the world map and minimap. Busy spots show as shaded zone areas. Separate filters for the world map and minimap, icon size per map, "Share my finds" copy text (no import). Works with Fennick's Cartographer when installed.
+- Guidepost 4.5.1: hunting loops use your Trailmarks finds when there are enough.
+- Fox Trials 1.4.0: three Trailmarks checks (57 total). Install-All now includes Trailmarks.
 
 ## 2026-10-27 Questie optional (Guidepost 4.5.0)
 - Guidepost: no Questie dependency. Blizzard quest log, tracking and map by default; Questie only through an optional, off-by-default setting with automatic fallback. No Questie code or data shipped. Other modules unchanged.
