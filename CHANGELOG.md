@@ -1,17 +1,24 @@
 # Changelog
 
-## 2026-10-27 Fennick's Cartographer 1.0.0 (new, optional), Core 1.5.0, Guidepost 4.5.2, Rest 1.2.3, Reputation 1.2.2, Merchant's Favor 1.2.2, Fox Trials 1.5.0
-- Cartographer: detailed world map (drag, wheel zoom, zone drill-down, coordinates, party, compass) and a square minimap (round as a setting). Flight paths, ships, zeppelins and the tram as route lines; "How do I get there?" trips using your known flight points. Per-map icon filters (including every Trailmarks type), pins with any of 50 icons, copy-only pin sharing. Off gives Blizzard's map back.
-- Core 1.5.0: map pin broker; Guidepost, Rest, Reputation and Merchant's Favor pins show on Cartographer first, then Blizzard.
-- Fox Trials 1.5.0: five Cartographer checks (62 total). Install-All now includes Cartographer (optional).
+## 2026-10-27 Fennick's Trailmarks 1.0.2, Beast Core 1.5.1, Cartographer 1.0.1 (Sage's reviews + verify)
+- Trailmarks 1.0.2 (1.0.1 was never released): share text prints names for ID-keyed finds (never n123), skips nameless finds; other players' kills ignored (engaged-in-combat or tapped check, no combat log). Merge tool refuses ID-like names. RC-117 extended, RC-143. Fox Trials doc check TM-06.
+- Tools: taint_check allow-list matched exactly (file + name), frame-name exemption by full repo path; layout_modules writes previews to build/previews (PREVIEW_OUT), not OUT, and exits 1 on problems.
+- Cartographer 1.0.1: corrupt saved data repaired + schema version; share text escapes "|"; ZoneName pcall guard; batched redraws; minimap via Core OnReassess hook (no ReassessOwner patch); map key binding and Minimap hook allow-listed (protected_api.REVIEWED, approved by the author), still combat-deferred; GetMinimapShape chaining documented. RC-136.
+- Core 1.5.1 also: the waypoint mirror remembers the exact point it set and never replaces or clears the player's own pin.
+- Trailmarks 1.0.1 also: draws its own minimap pins when Cartographer is on but its minimap is off; standalone minimap honors GetMinimapShape.
+- Core 1.5.1: C:On refuses COMBAT_LOG_EVENT_UNFILTERED / COMBAT_LOG_EVENT for every module (debug line, no registration).
+- Trailmarks 1.0.1: no combat log; kills via UNIT_HEALTH + UnitIsDead (target, mouseover, focus, nameplates; tap-denied skipped). Finds stored by internal ID key (never shown), names per locale; Rich/Small Thorium by node, not English name. Redraws batched after combat; saved-data migration (v2); quest-log ready gate after loading. Minimap pins and shading clamped to GetMinimapShape (square/round). Cartographer adapter used only when Cartographer is enabled. Node-name guess documented.
+- Tools: taint_check covers every add-on (no-arg crash fixed); forbidden-event scan covers all add-ons; share-box layout case; merge tool refuses non-English shares without --locale. RC-137..142; Fox Trials minor checks TM-04/05 (IN-GAME-CHECKS.md only).
 
-## 2026-10-27 Fennick's Trailmarks 1.0.0 (new, optional), Guidepost 4.5.1, Fox Trials 1.4.0
-- Trailmarks records where you find ore (13 kinds), herbs (28 kinds), treasure chests, quest mobs, quest objects and quest givers, and pins them on the world map and minimap. Busy spots show as shaded zone areas. Separate filters for the world map and minimap, icon size per map, "Share my finds" copy text (no import). Works with Fennick's Cartographer when installed.
-- Guidepost 4.5.1: hunting loops use your Trailmarks finds when there are enough.
-- Fox Trials 1.4.0: three Trailmarks checks (57 total). Install-All now includes Trailmarks.
-
-## 2026-10-27 Questie optional (Guidepost 4.5.0)
-- Guidepost: no Questie dependency. Blizzard quest log, tracking and map by default; Questie only through an optional, off-by-default setting with automatic fallback. No Questie code or data shipped. Other modules unchanged.
+## 2026-10-27 Fennick's Trailmarks 1.0.0 (new optional module), Guidepost 4.5.1, Fox Trials 1.4.0
+The author (2026-10-27): build it now so finds are collected from launch day; name "Fennick's Trailmarks" approved.
+- Trailmarks records ore and herb nodes (gathering casts), treasure chests (opening casts), quest targets (kill spot when an objective count rises; quest objects; nearby objective mobs on target/mouseover) and quest givers/turn-ins. Account-wide saved data; near finds merge with a count and last-seen time.
+- World map and minimap pins in teal, gold and amber; a target with 6+ finds in a zone is drawn as shaded areas. Per-type toggles, pin size, area opacity. Never shows IDs. 9 locales.
+- Six types plus 13 specific ores and 28 specific herbs (from loot or node name), each its own filter category and pin; generic fallback. One icon path table (Icons.lua) with all 50 Artzy pins (16 px on the minimap); icon list for Cartographer's manual-pin picker.
+- Map adapters: Fennick's Cartographer first when present, then Blizzard's world map and minimap, then any registered add-on; each pcall-guarded. Read API (Fennick_TRAILMARKS.API) for Cartographer.
+- Share my finds: read-only, pre-selected copy text. No import. tools/trailmarks_merge.py merges shared text into the shipped Data.lua offline.
+- Guidepost 4.5.1 uses recorded finds for hunting loops when there are 3+ (else plan data). Fox Trials 1.4.0 adds TM-01..03 (57 checks).
+- Install-all bundle now includes Trailmarks (optional) and its name carries -tm<version>. RC-114..124.
 
 ## 2026-10-27 Fox Trials 1.3.0: datamine hidden-data checks
 The author (2026-10-27): "Add the check to Fox Trials" (the in-game checks from the datamine obfuscation assessment).
@@ -19,6 +26,9 @@ The author (2026-10-27): "Add the check to Fox Trials" (the in-game checks from 
 - Minor, IN-GAME-CHECKS.md only: LVL-16 no test/placeholder entries, LVL-17 optional discovery (Manor Mistmantle, hidden portals), FAV-06 hidden items fill in.
 - Code review: Reputation lists only a fixed set of 15 real factions (test factions excluded); the flight network drops the placeholder node and test maps never reach Guidepost. No bug found.
 - Other add-ons and the install-all bundle are unchanged.
+
+## 2026-10-27 Questie optional (Guidepost 4.5.0)
+- Guidepost: no Questie dependency. Blizzard quest log, tracking and map by default; Questie only through an optional, off-by-default setting behind one pcall-guarded adapter with automatic fallback. No Questie code or data shipped. Other modules unchanged.
 
 ## 2026-10-25 In-game icons (Core 1.4.1, Guidepost 4.4.2, Rest 1.2.2, Reputation 1.2.1, Merchant's Favor 1.2.1)
 The author (2026-10-25): "Add the in-game logos that artzy made to the appropriate addons." Cosmetic only, no new features.
