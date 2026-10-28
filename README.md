@@ -30,10 +30,6 @@ Install Core plus only the modules you want. Guidepost is optional: Core has no 
 - **Languages:** German, French, Spanish, Italian, Portuguese (BR), Russian, Korean and Chinese (Simplified/Traditional) are machine translations that people have not reviewed yet. The game shows a note about this in setup and Settings, and any missing or broken string falls back to English. English is unchanged.
 - **Hotfixes and rollback:** see `HOTFIX.md`. The current and previous version of every add-on stay available.
 
-## Rules we build by (clarified by the author, 2026-10-24)
-- **Build and profession advice:** the old "no build or profession advice" rule was a scope limit for the setup menu and the leveling guide, not a suite-wide ban. The setup menu still makes no profession recommendations. Professions are part of leveling, so Guidepost's profession hints (only for professions you trained or picked) are on by default and can be turned off in Settings.
-- **Audio:** sound is not banned. Cues are optional, each has a toggle, and none is on by default.
-
 ## Core (v1.4.0)
 One window (Focus view), one waypoint arrow, shared look, setup, settings, minimap button, monster tooltip and frame moving. Core owns every Fennick command: `/fennick`, `/beast` or `/fbc` with `setup`, `move`, `move reset`, `why`, `focuson <module|auto>`, `minimap`, `debug`, `help`. Modules add their own words (for example `/fennick skip`, `/fennick lvl list`, `/fennick trials`); `/fennick help` lists everything and an unknown word prints the list.
 - **Minimap button:** left-click shows or hides the window, Shift-click turns the focused module on or off, right-click opens Settings, drag to move.
