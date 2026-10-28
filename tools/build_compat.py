@@ -25,7 +25,7 @@ def works(a):
     parts=[f'{cl["forever"]["short"]} {MARK[a["forever"]]}', f'{cl["era_hc"]["short"]} {MARK[a["era_hc"]]}']
     return f'<p class="works">Works on: {" · ".join(parts)} <a class="link" href="/compatibility.html#{a["slug"]}">Compatibility</a></p>'
 def optional_rows():
-    return ''.join(f'\n      <tr id="{o["slug"]}"><th scope="row">{E(o["name"])}</th><td><strong>{E(o["status"])}</strong> ({E(o["from"])}; built for {E(o["name"])} {E(o["tested"])}; in-game check pending, {E(o["license"])}). {E(o["what"])}</td></tr>' for o in D.get('optional',[]))+'\n      '
+    return ''.join(f'\n      <tr id="{o["slug"]}"><th scope="row">{E(o["name"])}</th><td><strong>{E(o["status"])}</strong> ({E(o["from"])}; built for {E(o["name"])} {E(o["tested"])}; released, not yet checked in game, {E(o["license"])}). {E(o["what"])}</td></tr>' for o in D.get('optional',[]))+'\n      '
 def optional_line(o):
     return f'<p class="works" data-optional="{o["slug"]}">{E(o["status"])} (optional, not bundled; {E(o["from"])}). <a class="link" href="/compatibility.html#{o["slug"]}">Details</a></p>'
 def render(path,text):

@@ -7,8 +7,8 @@
  "addons": [
   {"slug": "beast-core", "folder": "Fennick_BeastCore", "name": "Fennick's Beast Core (required)", "short": "Beast Core", "version": "1.6.1", "forever": "yes", "era_hc": "planned", "other": "no"},
   {"slug": "guidepost", "folder": "Fennick_Guidepost", "name": "Guidepost", "short": "Guidepost", "version": "4.5.4", "forever": "yes", "era_hc": "planned", "other": "no"},
-  {"slug": "cartographer", "folder": "Fennick_Cartographer", "name": "Cartographer", "short": "Cartographer", "version": "1.1.1", "forever": "yes", "era_hc": "planned", "other": "no"},
-  {"slug": "trailmarks", "folder": "Fennick_Trailmarks", "name": "Trailmarks", "short": "Trailmarks", "version": "1.1.1", "forever": "yes", "era_hc": "planned", "other": "no"},
+  {"slug": "cartographer", "folder": "Fennick_Cartographer", "name": "Cartographer", "short": "Cartographer", "version": "1.2.0", "forever": "yes", "era_hc": "planned", "other": "no"},
+  {"slug": "trailmarks", "folder": "Fennick_Trailmarks", "name": "Trailmarks", "short": "Trailmarks", "version": "1.1.2", "forever": "yes", "era_hc": "planned", "other": "no"},
   {"slug": "reputation", "folder": "Fennick_Reputation", "name": "Reputation", "short": "Reputation", "version": "1.2.3", "forever": "yes", "era_hc": "planned", "other": "no"},
   {"slug": "rest", "folder": "Fennick_Rest", "name": "Rest", "short": "Rest", "version": "1.2.4", "forever": "yes", "era_hc": "no", "other": "no"},
   {"slug": "merchants-favor", "folder": "Fennick_MerchantsFavor", "name": "Merchant's Favor", "short": "Merchant's Favor", "version": "1.2.3", "forever": "yes", "era_hc": "no", "other": "no"},

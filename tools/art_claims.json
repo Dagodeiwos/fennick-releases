@@ -1,5 +1,5 @@
 {
- "suite": {"Beast Core":"1.6.1","Guidepost":"4.5.4","Rest":"1.2.4","Reputation":"1.2.3","Merchant's Favor":"1.2.3","Trailmarks":"1.1.1","Cartographer":"1.1.1"},
+ "suite": {"Beast Core":"1.6.1","Guidepost":"4.5.4","Rest":"1.2.4","Reputation":"1.2.3","Merchant's Favor":"1.2.3","Trailmarks":"1.1.2","Cartographer":"1.2.0"},
  "faction_context": "Horde player (Tauren Hunter in Mulgore). Zeppelins are Horde; ships are shown as neutral transport. No Alliance-only content is shown.",
  "images": [
   {"file":"assets/hero/hero-desktop.png","size":[1600,560],"shows":"Brand hero: fox, wordmark, 7 add-on icons","terrain":"abstract background, no map; decorative pins limited to land-type finds (ore, herbs, chest, quest), no ships, zeppelins or portals","faction":"none","labels":["FENNICK'S ADDONS","Free add-ons for WoW Forever."],"versions":"none","source":"site/index.html tagline"},
