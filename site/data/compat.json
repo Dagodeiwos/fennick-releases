@@ -13,5 +13,9 @@
   {"slug": "rest", "folder": "Fennick_Rest", "name": "Rest", "short": "Rest", "version": "1.2.4", "forever": "yes", "era_hc": "no", "other": "no"},
   {"slug": "merchants-favor", "folder": "Fennick_MerchantsFavor", "name": "Merchant's Favor", "short": "Merchant's Favor", "version": "1.2.3", "forever": "yes", "era_hc": "no", "other": "no"},
   {"slug": "fox-trials", "folder": "Fennick_FoxTrials", "name": "Fox Trials (playtesters)", "short": "Fox Trials", "version": "1.6.0", "forever": "yes", "era_hc": "no", "other": "no"}
+ ],
+ "optional": [
+  {"slug": "openmap", "name": "OpenMap", "tested": "v0.7.5-beta", "license": "MIT", "url": "https://www.curseforge.com/wow/addons/openmap", "addons": ["cartographer", "trailmarks"], "from": "Cartographer 1.2.0, Trailmarks 1.1.2", "status": "Optional: works with OpenMap",
+   "what": "OpenMap is a seamless world map add-on by the OpenMap contributors. It's optional and not bundled. When it's installed, the map key opens OpenMap's view, and Cartographer draws your pins, Trailmarks finds, travel routes and planned trip on it. Fennick uses only OpenMap's public API and never changes its frames; without OpenMap nothing changes."}
  ]
 }

@@ -69,6 +69,9 @@
       <tr><th scope="row">Questie</th><td>Optional (off by default: <em>Use Questie data when installed</em>). Guidepost reads Questie's data for quest-hub steps, class filters and translated NPC names. It never changes Questie, and it doesn't read it during combat.</td></tr>
       <tr><th scope="row">ElvUI</th><td>Beast Core detects ElvUI and can match its font size (Look → <em>ElvUI (detected)</em>). It only reads ElvUI; it never changes it.</td></tr>
       <tr><th scope="row">Minimap button add-ons (LibDBIcon buttons)</th><td>Cartographer can optionally gather other add-ons' minimap buttons. It's off unless you turn it on.</td></tr>
+      <!-- compat:optional -->
+      <tr id="openmap"><th scope="row">OpenMap</th><td><strong>Optional: works with OpenMap</strong> (Cartographer 1.2.0, Trailmarks 1.1.2; built for OpenMap v0.7.5-beta; in-game check pending, MIT). OpenMap is a seamless world map add-on by the OpenMap contributors. It&#x27;s optional and not bundled. When it&#x27;s installed, the map key opens OpenMap&#x27;s view, and Cartographer draws your pins, Trailmarks finds, travel routes and planned trip on it. Fennick uses only OpenMap&#x27;s public API and never changes its frames; without OpenMap nothing changes.</td></tr>
+      <!-- /compat:optional -->
       <tr><th scope="row">Add-ons that ask for the minimap shape</th><td>Cartographer reports SQUARE while its square minimap is on, and passes the question on to any other add-on that answers it, so buttons from other add-ons line up.</td></tr>
       </tbody>
     </table></div>
