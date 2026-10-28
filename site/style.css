@@ -50,3 +50,10 @@ footer { margin-top:28px; border-top:1px solid var(--edge); padding-top:8px; }
   .btn{ display:block; width:100%; margin-right:0; text-align:center; }
   h2 { font-size:1.3rem; }
 }
+.works { margin:0 0 10px; font-size:.92rem; color:var(--lgold); }
+.tablewrap { overflow-x:auto; margin:10px 0 14px; }
+table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
+.compat th, .compat td { border:1px solid var(--edge); padding:6px 9px; text-align:left; vertical-align:top; }
+.compat thead th { font-family:"Cinzel", Georgia, serif; color:var(--gold); background:var(--teal); }
+.compat tbody th { color:var(--cream); font-weight:700; }
+.compat tr:target { outline:2px solid var(--lgold); }

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compatibility: which WoW versions and add-ons work with Fennick | Fennick&#x27;s Addons</title>
+<meta name="description" content="Which WoW versions each Fennick add-on works on, and which other add-ons work together or can clash.">
+<link rel="canonical" href="https://fennickaddons.dev/compatibility.html">
+<meta name="theme-color" content="#08343C">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fennick's Addons">
+<meta property="og:title" content="Compatibility: which WoW versions and add-ons work with Fennick | Fennick&#x27;s Addons">
+<meta property="og:description" content="Which WoW versions each Fennick add-on works on, and which other add-ons work together or can clash.">
+<meta property="og:url" content="https://fennickaddons.dev/compatibility.html">
+<meta property="og:image" content="https://fennickaddons.dev/assets/og/site.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Fennick&#x27;s Addons: the fennec fox emblem and the words Free add-ons for WoW Forever">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Compatibility: which WoW versions and add-ons work with Fennick | Fennick&#x27;s Addons">
+<meta name="twitter:description" content="Which WoW versions each Fennick add-on works on, and which other add-ons work together or can clash.">
+<meta name="twitter:image" content="https://fennickaddons.dev/assets/og/site.png">
+<meta name="twitter:image:alt" content="Fennick&#x27;s Addons: the fennec fox emblem and the words Free add-ons for WoW Forever">
+<link rel="preload" href="/assets/fonts/Cinzel-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="panel">
+  <p class="crumb"><a class="link" href="/">Fennick's Addons</a> / Compatibility</p>
+  <h1>Compatibility</h1>
+  <p class="lede">Which WoW versions each add-on works on, and which other add-ons work together with Fennick or can clash.</p>
+
+  <section id="versions">
+    <h2>Which WoW versions each add-on works on</h2>
+    <p class="note"><strong>Legend:</strong> ✅ Supported · 🛠 Planned (not released, not tested in game) · ⛔ Not supported (no plans)</p>
+    <!-- compat:table --><div class="tablewrap"><table class="compat">
+      <caption class="sr-only">Which WoW versions each add-on works on</caption>
+      <thead><tr><th scope="col">Add-on</th><th scope="col">Released</th><th scope="col">WoW Forever (1.60.1)</th><th scope="col">Classic Era Hardcore (1.15.9)</th><th scope="col">Other Classic (SoD, Anniversary, TBC, MoP) / Retail</th></tr></thead>
+      <tbody>
+      <tr id="beast-core"><th scope="row">Fennick&#x27;s Beast Core (required)</th><td>1.5.1</td><td>✅ Supported</td><td>🛠 Planned</td><td>⛔</td></tr>
+      <tr id="guidepost"><th scope="row">Guidepost</th><td>4.5.2</td><td>✅ Supported</td><td>🛠 Planned</td><td>⛔</td></tr>
+      <tr id="cartographer"><th scope="row">Cartographer</th><td>1.0.1</td><td>✅ Supported</td><td>🛠 Planned</td><td>⛔</td></tr>
+      <tr id="trailmarks"><th scope="row">Trailmarks</th><td>1.0.2</td><td>✅ Supported</td><td>🛠 Planned</td><td>⛔</td></tr>
+      <tr id="reputation"><th scope="row">Reputation</th><td>1.2.2</td><td>✅ Supported</td><td>🛠 Planned</td><td>⛔</td></tr>
+      <tr id="rest"><th scope="row">Rest</th><td>1.2.3</td><td>✅ Supported</td><td>⛔ Forever only</td><td>⛔</td></tr>
+      <tr id="merchants-favor"><th scope="row">Merchant&#x27;s Favor</th><td>1.2.2</td><td>✅ Supported</td><td>⛔ Forever only</td><td>⛔</td></tr>
+      <tr id="fox-trials"><th scope="row">Fox Trials (playtesters)</th><td>1.5.0</td><td>✅ Supported</td><td>⛔ Forever only</td><td>⛔</td></tr>
+      </tbody>
+    </table></div><!-- /compat:table -->
+    <ul>
+      <li><strong>Forever</strong> launches Nov 4. Every add-on is built for it today.</li>
+      <li><strong>Classic Era Hardcore:</strong> support is in progress for the five add-ons marked 🛠. They don't load on 1.15.9 yet. Hardcore needs its own Classic Era route, spawn and reputation data, because a wrong step can cost you your character. We won't mark it ✅ until it has been tested in game.</li>
+      <li><strong>Rest and Merchant's Favor stay on Forever.</strong> Classic has few ways to rest other than inns, and it has no Merchant's Favor at all. Fox Trials, the playtester checklist, is Forever only too.</li>
+      <li>If you're not sure, the add-on list on your character select screen shows "Out of date" for any version we don't support. Please don't use "Load out of date AddOns" to force one on.</li>
+    </ul>
+  </section>
+
+  <section id="together">
+    <h2>Other add-ons: what works together and what can clash</h2>
+    <p>This list is based on what our code actually touches. "Handled" means our code already checks for that add-on. Anything not tested in game says so.</p>
+    <h3>Works together (handled in code)</h3>
+    <div class="tablewrap"><table class="compat">
+      <thead><tr><th scope="col">Add-on</th><th scope="col">What happens</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">TomTom</th><td>Guidepost and Beast Core use TomTom's arrow when it's installed (setting: <em>Use TomTom when installed</em>). They only add or remove their <strong>own</strong> waypoints, never yours, and never touch TomTom during combat. Without TomTom, the built-in arrow is used. You never get two arrows.</td></tr>
+      <tr><th scope="row">Questie</th><td>Optional (off by default: <em>Use Questie data when installed</em>). Guidepost reads Questie's data for quest-hub steps, class filters and translated NPC names. It never changes Questie, and it doesn't read it during combat.</td></tr>
+      <tr><th scope="row">ElvUI</th><td>Beast Core detects ElvUI and can match its font size (Look → <em>ElvUI (detected)</em>). It only reads ElvUI; it never changes it.</td></tr>
+      <tr><th scope="row">Minimap button add-ons (LibDBIcon buttons)</th><td>Cartographer can optionally gather other add-ons' minimap buttons. It's off unless you turn it on.</td></tr>
+      <tr><th scope="row">Add-ons that ask for the minimap shape</th><td>Cartographer reports SQUARE while its square minimap is on, and passes the question on to any other add-on that answers it, so buttons from other add-ons line up.</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Possible clashes (by what they touch)</h3>
+    <div class="tablewrap"><table class="compat">
+      <thead><tr><th scope="col">Area</th><th scope="col">Our add-on</th><th scope="col">What we do</th><th scope="col">What can clash</th><th scope="col">What to do</th></tr></thead>
+      <tbody>
+      <tr id="minimap"><th scope="row">Minimap shape and size</th><td>Cartographer</td><td>Restyles Blizzard's minimap (square by default), only out of combat. Turning it off restores Blizzard's.</td><td>Other minimap restylers (SexyMap, ElvUI/other UI suites' minimaps)</td><td>Use one. Turn off <em>Cartographer minimap</em> in settings, or the other add-on's minimap module. <span class="badge">Pending</span> A SexyMap check isn't in the code yet; the default when SexyMap is loaded is still being decided.</td></tr>
+      <tr><th scope="row">World map and the <strong>M</strong> key</th><td>Cartographer</td><td>Opens its own map on your world-map key (override binding, changed only out of combat). Blizzard's map stays one click away.</td><td>World map add-ons (Leatrix Maps, Mapster-style), other add-ons that rebind M</td><td>Turn off <em>map key</em> in Cartographer to keep M for Blizzard's map, or use the other add-on on Blizzard's map.</td></tr>
+      <tr><th scope="row">World and minimap pins</th><td>Trailmarks</td><td>Draws its pins on Blizzard's world map canvas and the minimap. No windows except settings.</td><td>Pin add-ons (HandyNotes, GatherMate2, Questie, RareScanner)</td><td>They normally stack fine. If it's crowded, use the icon filters. <em>Untested with each add-on.</em></td></tr>
+      <tr><th scope="row">Waypoint arrow</th><td>Beast Core / Guidepost</td><td>One arrow; uses TomTom if present.</td><td>Other arrow add-ons (guide add-ons with their own arrow)</td><td>Turn off one arrow.</td></tr>
+      <tr><th scope="row">Quest guidance</th><td>Guidepost</td><td>Its own step list; can read Questie.</td><td>Other leveling guides (RestedXP, Follow The Arrow)</td><td>Run one guide at a time. Auto-accept/turn-in in both will fight.</td></tr>
+      <tr><th scope="row">Unit tooltips</th><td>Beast Core</td><td>Adds monster info lines using Blizzard's safe tooltip hooks. Never replaces the tooltip.</td><td>Tooltip add-ons (TacoTip, idTip, Leatrix Plus tooltip options)</td><td>Should be fine. Lines just add up. <em>Untested.</em></td></tr>
+      <tr><th scope="row">Reputation bar</th><td>Reputation</td><td>Doesn't replace Blizzard's reputation or XP bar.</td><td>XP/rep bar replacers</td><td>No known clash.</td></tr>
+      <tr><th scope="row">Moving windows (Edit Mode)</th><td>Beast Core</td><td>Supports Blizzard Edit Mode (new in Classic 1.15.9) through LibEditMode.</td><td>MoveAny, UI suites that move frames</td><td>Move our frames with one tool, not both. <em>Classic Edit Mode untested.</em></td></tr>
+      <tr><th scope="row">Settings</th><td>Guidepost / Beast Core</td><td>Normal Blizzard Settings / Interface Options page.</td><td>none known</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <p>Found a clash? Please open an issue on <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/issues">GitHub</a> (list your other add-ons and paste the error).</p>
+  </section>
+
+  <section id="popular">
+    <h2>Popular add-on types that may clash (cursory check)</h2>
+    <p>Download counts come from CurseForge's WoW search filtered to Classic, sorted by total downloads. <strong>CurseForge counts cover all game versions, not only Classic Era.</strong> None of these have been tested with Fennick yet.</p>
+    <div class="tablewrap"><table class="compat">
+      <thead><tr><th scope="col">Type</th><th scope="col">Top 3 seen (downloads)</th><th scope="col">Likely issue</th><th scope="col">Workaround</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">Minimap replacers</th><td>SexyMap (37.1M), MinimapButtonButton (17.3M), HidingBar (7.4M)</td><td>Two add-ons restyle the minimap or move its buttons</td><td>Turn off Cartographer's minimap or the other add-on; use only one button gatherer</td><td>untested</td></tr>
+      <tr><th scope="row">World map enhancers</th><td>Leatrix Maps (41.1M), Atlas (22.5M), HandyNotes: MapNotes (5.3M)</td><td>Both want the M key/world map; extra pins</td><td>Turn off Cartographer's map key, or use Blizzard's map with Leatrix Maps</td><td>untested</td></tr>
+      <tr><th scope="row">Quest helpers / guides</th><td>Questie (210.2M), RestedXP Guide (28.0M), Follow The Arrow (978.4K)</td><td>Two guides, two arrows, auto-accept fighting</td><td>Questie: handled (optional data). Guides: run one at a time</td><td>Questie handled in code; others untested</td></tr>
+      <tr><th scope="row">Waypoint / arrow</th><td>TomTom (91.1M). No other arrow add-on in the top Classic map list</td><td>none expected</td><td>Handled: TomTom is used as our arrow</td><td>handled in code</td></tr>
+      <tr><th scope="row">Gathering / node trackers</th><td>HandyNotes (60.9M), GatherMate2 Classic (10.6M), RareScanner (139.9M, rares)</td><td>Crowded map/minimap pins</td><td>Use Cartographer/Trailmarks icon filters</td><td>untested</td></tr>
+      <tr><th scope="row">Tooltip add-ons</th><td>TacoTip (8.4M), idTip (3.6M), Leatrix Plus (74.1M, has tooltip options)</td><td>Extra or reordered tooltip lines</td><td>Usually none needed</td><td>untested</td></tr>
+      <tr><th scope="row">UI replacement suites</th><td>Bartender4 (82.0M), Leatrix Plus (74.1M), MoveAny (21.8M). ElvUI isn't on CurseForge; count not checked</td><td>Minimap/frame moving, Edit Mode overlap</td><td>ElvUI font match is handled; turn off one minimap; move frames with one tool</td><td>ElvUI read-only handled; rest untested</td></tr>
+      <tr><th scope="row">Reputation / XP bars</th><td>Easy Experience Bar (419.7K), Lemmos Experience Bar (47.5K), BetterExpBar (8.3K)</td><td>Reputation doesn't replace the bar, so a clash is unlikely</td><td>none expected</td><td>untested</td></tr>
+      </tbody>
+    </table></div>
+    <p class="meta">Checked Oct 27, 2026. Sources: <a class="link" href="https://www.curseforge.com/wow/search?page=1&amp;pageSize=20&amp;sortBy=total-downloads&amp;class=addons&amp;gameVersionTypeId=67408">all add-ons</a> · <a class="link" href="https://www.curseforge.com/wow/search?page=1&amp;pageSize=20&amp;sortBy=total-downloads&amp;class=addons&amp;gameVersionTypeId=67408&amp;categories=map-minimap">Map &amp; Minimap</a> · <a class="link" href="https://www.curseforge.com/wow/search?page=1&amp;pageSize=20&amp;sortBy=total-downloads&amp;class=addons&amp;gameVersionTypeId=67408&amp;categories=quests-leveling">Quests &amp; Leveling</a> · <a class="link" href="https://www.curseforge.com/wow/search?page=1&amp;pageSize=20&amp;sortBy=total-downloads&amp;class=addons&amp;gameVersionTypeId=67408&amp;categories=tooltip">Tooltip</a> · <a class="link" href="https://www.curseforge.com/wow/search?page=1&amp;pageSize=20&amp;sortBy=total-downloads&amp;class=addons&amp;gameVersionTypeId=67408&amp;categories=action-bars">Action Bars</a> · <a class="link" href="https://www.curseforge.com/wow/search?page=1&amp;pageSize=20&amp;sortBy=total-downloads&amp;class=addons&amp;gameVersionTypeId=67408&amp;search=experience%20bar">XP bar search</a></p>
+  </section>
+
+  <footer>
+    <p>Fennick's Addons is a fan project, not affiliated with or endorsed by Blizzard Entertainment. World of Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc.</p>
+    <p>License: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/blob/main/LICENSE.md">PolyForm Noncommercial 1.0.0</a>. In plain words: free to download and use, for noncommercial purposes only; nobody may sell it.</p>
+    <p>Cinzel font by the Cinzel Project Authors, <a class="link" href="/assets/fonts/OFL.txt">SIL Open Font License 1.1</a>. Feature images are mockups, not in-game screenshots.</p>
+    <p>Last updated: Oct 27, 2026.</p>
+    <p>Which WoW versions and other add-ons work with Fennick: <a class="link" href="/compatibility.html">Compatibility</a>. Bugs: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/issues">GitHub issues</a>.</p>
+  </footer>
+</main>
+</body>
+</html>
