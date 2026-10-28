@@ -1,17 +1,16 @@
 # Changelog
 
-## 2026-10-27 Fennick's Trailmarks 1.0.2, Beast Core 1.5.1, Cartographer 1.0.1 (Sage's reviews + verify)
+## Fennick's Trailmarks 1.0.2, Beast Core 1.5.1, Cartographer 1.0.1 (Sage's reviews + verify)
 - Trailmarks 1.0.2 (1.0.1 was never released): share text prints names for ID-keyed finds (never n123), skips nameless finds; other players' kills ignored (engaged-in-combat or tapped check, no combat log). Merge tool refuses ID-like names. RC-117 extended, RC-143. Fox Trials doc check TM-06.
 - Tools: taint_check allow-list matched exactly (file + name), frame-name exemption by full repo path; layout_modules writes previews to build/previews (PREVIEW_OUT), not OUT, and exits 1 on problems.
-- Cartographer 1.0.1: corrupt saved data repaired + schema version; share text escapes "|"; ZoneName pcall guard; batched redraws; minimap via Core OnReassess hook (no ReassessOwner patch); map key binding and Minimap hook allow-listed (protected_api.REVIEWED, approved by the author), still combat-deferred; GetMinimapShape chaining documented. RC-136.
+- Cartographer 1.0.1: corrupt saved data repaired + schema version; share text escapes "|"; ZoneName pcall guard; batched redraws; minimap via Core OnReassess hook (no ReassessOwner patch); map key binding and Minimap hook allow-listed (protected_api.REVIEWED, approved by ), still combat-deferred; GetMinimapShape chaining documented. RC-136.
 - Core 1.5.1 also: the waypoint mirror remembers the exact point it set and never replaces or clears the player's own pin.
 - Trailmarks 1.0.1 also: draws its own minimap pins when Cartographer is on but its minimap is off; standalone minimap honors GetMinimapShape.
 - Core 1.5.1: C:On refuses COMBAT_LOG_EVENT_UNFILTERED / COMBAT_LOG_EVENT for every module (debug line, no registration).
 - Trailmarks 1.0.1: no combat log; kills via UNIT_HEALTH + UnitIsDead (target, mouseover, focus, nameplates; tap-denied skipped). Finds stored by internal ID key (never shown), names per locale; Rich/Small Thorium by node, not English name. Redraws batched after combat; saved-data migration (v2); quest-log ready gate after loading. Minimap pins and shading clamped to GetMinimapShape (square/round). Cartographer adapter used only when Cartographer is enabled. Node-name guess documented.
 - Tools: taint_check covers every add-on (no-arg crash fixed); forbidden-event scan covers all add-ons; share-box layout case; merge tool refuses non-English shares without --locale. RC-137..142; Fox Trials minor checks TM-04/05 (IN-GAME-CHECKS.md only).
 
-## 2026-10-27 Fennick's Trailmarks 1.0.0 (new optional module), Guidepost 4.5.1, Fox Trials 1.4.0
-The author (2026-10-27): build it now so finds are collected from launch day; name "Fennick's Trailmarks" approved.
+## Fennick's Trailmarks 1.0.0 (new optional module), Guidepost 4.5.1, Fox Trials 1.4.0
 - Trailmarks records ore and herb nodes (gathering casts), treasure chests (opening casts), quest targets (kill spot when an objective count rises; quest objects; nearby objective mobs on target/mouseover) and quest givers/turn-ins. Account-wide saved data; near finds merge with a count and last-seen time.
 - World map and minimap pins in teal, gold and amber; a target with 6+ finds in a zone is drawn as shaded areas. Per-type toggles, pin size, area opacity. Never shows IDs. 9 locales.
 - Six types plus 13 specific ores and 28 specific herbs (from loot or node name), each its own filter category and pin; generic fallback. One icon path table (Icons.lua) with all 50 Artzy pins (16 px on the minimap); icon list for Cartographer's manual-pin picker.
@@ -20,39 +19,36 @@ The author (2026-10-27): build it now so finds are collected from launch day; na
 - Guidepost 4.5.1 uses recorded finds for hunting loops when there are 3+ (else plan data). Fox Trials 1.4.0 adds TM-01..03 (57 checks).
 - Install-all bundle now includes Trailmarks (optional) and its name carries -tm<version>. RC-114..124.
 
-## 2026-10-27 Fox Trials 1.3.0: datamine hidden-data checks
-The author (2026-10-27): "Add the check to Fox Trials" (the in-game checks from the datamine obfuscation assessment).
+## Fox Trials 1.3.0: datamine hidden-data checks
 - 3 new high-impact checks (54 total): PVP-ALL-11 server-side tuning on a target dummy, PVP-ALL-12 hidden talents or Legacy perks, REP-06 server-only item-started quests.
 - Minor, IN-GAME-CHECKS.md only: LVL-16 no test/placeholder entries, LVL-17 optional discovery (Manor Mistmantle, hidden portals), FAV-06 hidden items fill in.
 - Code review: Reputation lists only a fixed set of 15 real factions (test factions excluded); the flight network drops the placeholder node and test maps never reach Guidepost. No bug found.
 - Other add-ons and the install-all bundle are unchanged.
 
-## 2026-10-27 Questie optional (Guidepost 4.5.0)
+## Questie optional (Guidepost 4.5.0)
 - Guidepost: no Questie dependency. Blizzard quest log, tracking and map by default; Questie only through an optional, off-by-default setting behind one pcall-guarded adapter with automatic fallback. No Questie code or data shipped. Other modules unchanged.
 
-## 2026-10-25 In-game icons (Core 1.4.1, Guidepost 4.4.2, Rest 1.2.2, Reputation 1.2.1, Merchant's Favor 1.2.1)
-The author (2026-10-25): "Add the in-game logos that artzy made to the appropriate addons." Cosmetic only, no new features.
+## In-game icons (Core 1.4.1, Guidepost 4.4.2, Rest 1.2.2, Reputation 1.2.1, Merchant's Favor 1.2.1)
 - New Artzy icons (fennec fox on a teal tile, gold rim, add-on emblem) as the 32px window-header icon. A 64x64 TGA is used so WoW scales it down.
 - Rest, Reputation and Merchant's Favor now ship their own `Media/` icon. Core keeps matching copies as a fallback.
 - `## IconTexture` added to each changed .toc, so the icon shows in the AddOns list where the client supports it.
 - Core 1.4.1 also ships the support line already in source (fennick@fennickaddons.dev in `/fennick help`).
 - Fox Trials is unchanged (1.2.1).
 
-## 2026-10-25 Support address, landing page, bug form, launch dates (docs/site only)
+## Support address, landing page, bug form, launch dates (docs/site only)
 - Support and bug reports: fennick@fennickaddons.dev (README, DESCRIPTIONS, `/fennick help` line in all 10 languages; source only, ships with the next Core release).
 - `site/`: static landing page for fennickaddons.dev (downloads, changelog, donation placeholder), using Artzy's icons; hosting steps in site/README.md.
 - GitHub bug-report form and contact link (`.github/ISSUE_TEMPLATE`).
 - Dates: WoW Forever releases Nov 4, so Fox Trials results are due Nov 7 (was Oct 29), in-game checks start Nov 4, and the freeze's live-play week runs Nov 4 to about Nov 11.
 
-## 2026-10 Sleeping-bag notification (Rest 1.2.1, Guidepost 4.4.1, Fox Trials 1.2.1)
-The author (2026-10-24): "The reminder should be there but more as a notification that is just to remind the player."
+## Sleeping-bag notification (Rest 1.2.1, Guidepost 4.4.1, Fox Trials 1.2.1)
 - Rest: the Cozy Sleeping Bag reminder is now a light notification: one brief on-screen message (UI error area) plus one chat line. Same conditions as before (you own the bag, it is off cooldown, buff missing or under 15 min, out of combat, outside a rest area, idle 1 min or logging out). Once per opportunity: it re-arms only after the conditions lapse. Fires whichever module has focus, Guidepost included. No longer in the Rest window or riders. New Rest setting "Sleeping bag reminder" (on by default). Optional sound through Core's "Sleeping bag reminder" cue (off by default). Nothing is used for you.
 - Guidepost: no longer shows its own sleeping-bag line; Rest is the single owner.
 - Fox Trials: LVL-15 rewritten for the one-notification rule (translated in all 9 languages). Still 51 checks.
 - Install-all bundle name now includes the Rest version. RC-96 replaced (fires under Guidepost focus, once, never duplicated).
 
-## 2026-10 Scope audit (Core 1.4.0, Guidepost 4.4.0, Rest 1.2.0, Reputation 1.2.0, Merchant's Favor 1.2.0, Fox Trials 1.2.0)
-Applies the reviewed scope-audit fix list (reviews/scope/COMBINED.md), approved by the author on 2026-10-24, in five batches.
+## Scope audit (Core 1.4.0, Guidepost 4.4.0, Rest 1.2.0, Reputation 1.2.0, Merchant's Favor 1.2.0, Fox Trials 1.2.0)
+Applies the reviewed scope-audit fix list (reviews/scope/COMBINED.md) in five batches.
 - Docs: SCOPE-AUDIT corrections, rule clarifications (build/profession advice was a setup-menu and leveling scope limit; audio is allowed as optional, toggled cues), API.md module boundaries, HOTFIX.md, download and language notes.
 - Core: sound cue registry with per-cue toggles (all off), plain-language version-mismatch line, one line per module in setup and `/beast help`.
 - Guidepost: cues through Core; the old upgrade step no longer switches off Sounds suite-wide; opacity and minimap left to Core. Profession hints unchanged.
@@ -60,18 +56,18 @@ Applies the reviewed scope-audit fix list (reviews/scope/COMBINED.md), approved 
 - Fox Trials: 51 checks. It is now a tester-only download; players get the install-all bundle without it.
 - CI: S5 boundary guard. Regression tests RC-91..RC-100.
 
-## 2026-10 Guidepost (Guidepost 4.3.1)
+## Guidepost (Guidepost 4.3.1)
 - The Fennick Leveling Guide is now **Fennick's Guidepost**: new name in the AddOns list (Notes say "formerly the Fennick Leveling Guide"), window and module titles, Core module picker, Settings, setup page, minimap tooltip, key bindings and Fox Trials filter. The name stays in English in every language.
 - Folder and .toc are now `Fennick_Guidepost`; saved variables are `Fennick_GuidepostDB` (per character) and `Fennick_GuidepostProfiles` (account). Saved data starts fresh (pre-release, no migration). Delete any old `Fennick_LevelingGuide` folder. Module key `leveling` and all slash commands are unchanged.
 - New Guidepost icon from Artzy's brand art (`Fennick_Guidepost/Media`).
 
-## 2026-10 l10n (Core 1.3.0, Leveling 4.3.0, Rest 1.1.0, Reputation 1.1.0, Merchant's Favor 1.1.0, Fox Trials 1.1.0)
+## Core 1.3.0, Leveling 4.3.0, Rest 1.1.0, Reputation 1.1.0, Merchant's Favor 1.1.0, Fox Trials 1.1.0
 - Multi-language (Option D): locale framework in Core; machine-translated UI text, Leveling step notes and Fox Trials texts for deDE, frFR, esES (esMX), itIT, ptBR (ptPT), ruRU, koKR, zhCN, zhTW, labelled "machine translation" in Settings and on the setup welcome page until reviewed. Coverage: translations/STATUS.md.
 - English text, fonts and slash commands unchanged. Quest/item/zone/faction/spell names come from the client by ID; NPC names from Questie when installed.
 - Five English-text dependencies removed (hearth, buying hints, inn bind, danger notes, Merchant's Favor currency). Cinzel titles fall back to the client font on ruRU/koKR/zhCN/zhTW. Buttons size to their label.
 - Reviewers: CONTRIBUTING-TRANSLATIONS.md and translations/<locale>.csv (repo only). Fox Trials 48 checks (+CORE-L1); minor locale checks in IN-GAME-CHECKS.md.
 
-## 2026-10 (Core 1.2.0, Leveling 4.2.0, Rest 1.0.1, Reputation 1.0.2, Merchant's Favor 1.0.2, Fox Trials 1.0.0)
+## Core 1.2.0, Leveling 4.2.0, Rest 1.0.1, Reputation 1.0.2, Merchant's Favor 1.0.2, Fox Trials 1.0.0
 - Core: module API gate (a module needing a newer Core refuses with one chat line), Core-owned `/fennick` with module subcommands and help, view hash (no redraw when nothing changed), saved-settings schema with `_unknown` keys kept, shared event frame and idle clock, Arrow/TomTom only removes its own waypoints and never touches TomTom in combat, Edit Mode nudge keys only after a click, setup X counts as Skip, guidance overflow tooltip, minimap left-click = window / Shift-click = module, combat tooltip off by default, realm date for Darkmoon Faire and daily resets.
 - Look: Artzy's teal and gold look with module icons, focus card and gold progress bar; shared status colours honour the colour-blind option.
 - Leveling: progress keyed by stable step IDs (reloads, regenerated data and inserted steps no longer shift your place or skips), bounded saved tables, protected init, coalesced events, one rule for showing the window, settings duplicated in Core removed, hub index built out of combat, kills-to-level counts rested XP, unknown race uses your faction's route, reward pick waits for item data, item and spell IDs instead of English names.
