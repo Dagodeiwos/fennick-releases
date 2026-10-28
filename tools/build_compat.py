@@ -24,8 +24,15 @@ def works(a):
     cl=D['clients']
     parts=[f'{cl["forever"]["short"]} {MARK[a["forever"]]}', f'{cl["era_hc"]["short"]} {MARK[a["era_hc"]]}']
     return f'<p class="works">Works on: {" · ".join(parts)} <a class="link" href="/compatibility.html#{a["slug"]}">Compatibility</a></p>'
+def optional_rows():
+    return ''.join(f'\n      <tr id="{o["slug"]}"><th scope="row">{E(o["name"])}</th><td><strong>{E(o["status"])}</strong> ({E(o["from"])}; built for {E(o["name"])} {E(o["tested"])}; in-game check pending, {E(o["license"])}). {E(o["what"])}</td></tr>' for o in D.get('optional',[]))+'\n      '
+def optional_line(o):
+    return f'<p class="works" data-optional="{o["slug"]}">{E(o["status"])} (optional, not bundled; {E(o["from"])}). <a class="link" href="/compatibility.html#{o["slug"]}">Details</a></p>'
 def render(path,text):
     t=re.sub(r'(<!-- compat:table -->).*?(<!-- /compat:table -->)',lambda m:m.group(1)+table()+m.group(2),text,flags=re.S)
+    t=re.sub(r'(<!-- compat:optional -->).*?(<!-- /compat:optional -->)',lambda m:m.group(1)+optional_rows()+m.group(2),t,flags=re.S)
+    for o in D.get('optional',[]):
+        t=re.sub(r'<p class="works" data-optional="'+o['slug']+r'">.*?</p>',lambda m:optional_line(o),t)
     for a in D['addons']:
         t=re.sub(r'<p class="works" data-addon="'+a['slug']+r'">.*?</p>|<p class="works">Works on:[^\n]*?compatibility\.html#'+a['slug']+r'">Compatibility</a></p>',works(a),t)
     return t

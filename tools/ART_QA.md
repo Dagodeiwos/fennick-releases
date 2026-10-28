@@ -26,3 +26,9 @@ Run this every time the images are rebuilt:
    - [ ] **Mockup marking:** a MOCKUP stamp plus a "Mockup: … / Not an in-game screenshot" bar, and the stamp covers no key content.
    - [ ] **Originality:** no Blizzard, Warcraft or RestedXP art, fonts or map tiles. Map scenes are labelled "Example terrain (original art, not a game map)".
    - [ ] **Readability:** text is legible at the size shown on the site (desktop and mobile).
+
+## Changed images only (code branches)
+`python3 tools/art_qa.py --changed` (RANGE env, default `origin/main...HEAD`) lists the images changed on a branch and fails
+when one has no checklist line (an entry in `tools/art_claims.json`, or `<file> | pass/fix | note` in `reviews/artzy/*.md`).
+It also lists add-on versions on the site that are behind the .toc files (informational until release) and runs the full
+checks above when a site image or page changed. `tests/run.py --changed` runs it whenever an image, `site/assets/` or an art tool changes.
