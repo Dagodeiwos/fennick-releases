@@ -55,7 +55,6 @@ Rested XP and where to log out. Works with Core alone.
 - **Cozy Sleeping Bag** reminder when you own it, it is ready, you are outside a rest area, out of combat, the buff is missing or under 15 min, and you are idle a minute or logging out. Never used for you.
 - **Camp Tent** line at a campfire when rested is under 5% and Boosted Rest is not on you.
 - Each login compares rested gained with the expected amount; the result appears only in `/fennick why` and debug.
-- No sounds, no IDs, no buying advice.
 
 ## Reputation (v1.2.0)
 Shows rep turn-ins you can do with what is already in your bags: city cloth donations, Timbermaw, Argent Dawn, Thorium Brotherhood, Cenarion Circle, Darkmoon Faire (only in the faire's week and zone; dates marked unconfirmed until checked in game, and after the last known week it points you to the in-game calendar). Forever factions are added once their turn-in data is confirmed. Checks your side, level, standing caps and earlier quests. Turn-ins that are not confirmed on Forever's client data are marked so. No dungeon or raid reps, auction or profession advice. Library books stay in the Leveling module, because they give XP on the route.
