@@ -5,8 +5,8 @@
              "era_hc": {"label": "Classic Era Hardcore", "short": "Classic HC", "interface": "11509", "build": "1.15.9"},
              "other": {"label": "Other Classic (SoD, Anniversary, TBC, MoP) / Retail", "short": "Other", "interface": null, "build": null}},
  "addons": [
-  {"slug": "beast-core", "folder": "Fennick_BeastCore", "name": "Fennick's Beast Core (required)", "short": "Beast Core", "version": "1.6.1", "forever": "yes", "era_hc": "planned", "other": "no"},
-  {"slug": "guidepost", "folder": "Fennick_Guidepost", "name": "Guidepost", "short": "Guidepost", "version": "4.5.4", "forever": "yes", "era_hc": "planned", "other": "no"},
+  {"slug": "beast-core", "folder": "Fennick_BeastCore", "name": "Fennick's Beast Core (required)", "short": "Beast Core", "version": "1.8.0", "forever": "yes", "era_hc": "planned", "other": "no"},
+  {"slug": "guidepost", "folder": "Fennick_Guidepost", "name": "Guidepost", "short": "Guidepost", "version": "4.7.0", "forever": "yes", "era_hc": "planned", "other": "no"},
   {"slug": "cartographer", "folder": "Fennick_Cartographer", "name": "Cartographer", "short": "Cartographer", "version": "1.2.0", "forever": "yes", "era_hc": "planned", "other": "no"},
   {"slug": "trailmarks", "folder": "Fennick_Trailmarks", "name": "Trailmarks", "short": "Trailmarks", "version": "1.1.2", "forever": "yes", "era_hc": "planned", "other": "no"},
   {"slug": "reputation", "folder": "Fennick_Reputation", "name": "Reputation", "short": "Reputation", "version": "1.2.3", "forever": "yes", "era_hc": "planned", "other": "no"},
