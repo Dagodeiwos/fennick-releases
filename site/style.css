@@ -57,3 +57,120 @@ table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
 .compat thead th { font-family:"Cinzel", Georgia, serif; color:var(--gold); background:var(--teal); }
 .compat tbody th { color:var(--cream); font-weight:700; }
 .compat tr:target { outline:2px solid var(--lgold); }
+
+/* ===================================================================================================
+   Three-layer parallax (back art, content, front edge art), done with CSS 3D perspective only.
+   The site's CSP blocks every script (script-src 'none'), so there is no JavaScript here at all.
+
+   How it works, in short:
+   - .px is the element that scrolls (instead of the whole page). It has `perspective: 1px`, which means
+     "children pushed back or pulled forward on the Z axis look smaller or bigger, as in 3D".
+   - When something sits further away (negative translateZ) it also *moves* slower as you scroll, and
+     something closer (positive translateZ) moves faster. That is the parallax.
+   - Moving a layer on Z also shrinks or grows it, so each layer gets a scale() that cancels that out.
+     The rule is: scale = 1 - z / perspective. Its scroll speed is then 1 / scale.
+     back:  z = -0.6px -> scale 1.6  -> moves at 0.625x
+     front: z = 0.25px -> scale 0.75 -> moves at 1.33x
+     the content stays at z = 0 and moves at a normal 1x.
+   - The layers are absolutely positioned behind/around the content, so they never cause layout shift.
+
+   To change the art: edit only the file names in this block. The fox is an <img> in each page (class px-fox).
+   =================================================================================================== */
+:root {
+  /* Each art slot has a plain PNG (works everywhere) and an image-set() that lets the browser pick WebP, and the
+     sharper @2x file on high-density screens. The image-set is only used where the browser supports it (see the
+     @supports rule below), because a var() that turns out invalid would leave the layer with no image at all. */
+  --px-back-art: url("/assets/parallax/back-map-tile.png");     /* far background (a map), repeats down the page */
+  --px-back-set: image-set(url("/assets/parallax/back-map-tile.webp") type("image/webp") 1x,
+                           url("/assets/parallax/back-map-tile@2x.webp") type("image/webp") 2x,
+                           url("/assets/parallax/back-map-tile.png") 1x);
+  --px-back-tile: 1600px auto;                                   /* size of one back tile */
+  --px-back-w: 1600px;                                           /* its width, for the edge fade */
+  --px-edge-art: url("/assets/parallax/edge-left.png");         /* left edge; the right edge is the same art mirrored */
+  --px-edge-set: image-set(url("/assets/parallax/edge-left.webp") type("image/webp") 1x,
+                           url("/assets/parallax/edge-left@2x.webp") type("image/webp") 2x,
+                           url("/assets/parallax/edge-left.png") 1x);
+  --px-edge-tile: 100% auto;
+  --px-edge-w: min(220px, max(0px, calc((100vw - 1140px) / 2)));  /* only as wide as the empty margin beside the content */
+  --px-back-z: -0.6px;  --px-back-scale: 1.6;      /* 0.625x speed */
+  --px-front-z: 0.25px; --px-front-scale: 0.75;    /* 1.33x speed */
+}
+html, body { height:100%; }
+body { overflow:hidden; }                 /* the page itself no longer scrolls; .px does */
+.px {
+  height:100%; overflow-x:hidden; overflow-y:auto;
+  perspective:1px; perspective-origin:50% 0;   /* the "camera" sits at the top centre of the window */
+  scroll-behavior:smooth; outline:none; background:var(--deep);
+}
+.px-scene { position:relative; transform-style:preserve-3d; min-height:100%; }   /* preserve-3d keeps the layers in 3D space */
+.px-layer {
+  position:absolute; top:0; pointer-events:none;   /* decoration only: clicks go through to the content */
+  transform-origin:50% 0; will-change:transform;
+}
+.px-back {
+  /* Chrome counts the *scaled* box when it works out how far the page can scroll, so the height is divided by the
+     scale; otherwise the page would get a long empty tail. The last bit of the window at the very bottom shows
+     the plain .px background colour instead, which matches the bottom of the art. */
+  left:0; right:0; height:calc(100% / var(--px-back-scale)); z-index:-1;
+  /* Three background layers, top one first: (1) a fade from --deep at the tile's left and right edges, so on screens
+     wider than the 1600px tile the map melts into the plain colour instead of stopping at a hard line; (2) the map
+     tile, centred and repeating downwards only; (3) the plain --deep colour underneath. */
+  background:
+    linear-gradient(90deg, var(--deep), transparent 14%, transparent 86%, var(--deep)) center top / var(--px-back-w) 100% no-repeat,
+    var(--px-back-art) center top / var(--px-back-tile) repeat-y,
+    var(--deep);
+  transform:translate3d(0,0,var(--px-back-z)) scale(var(--px-back-scale));
+}
+/* The front strips move faster, so they must be taller than the page to still cover the bottom. Height divided by
+   the scale makes them exactly as tall as the page once scaled (same scroll-length reason as the back layer). */
+.px-front { width:var(--px-edge-w); height:calc(100% / var(--px-front-scale)); z-index:2; background:var(--px-edge-art) 0 0 / var(--px-edge-tile) repeat-y; }
+.px-left  { left:0;  transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale)); transform-origin:calc(50vw) 0; }
+.px-right { right:0; background:none; transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale)); transform-origin:calc(var(--px-edge-w) - 50vw) 0; }
+/* The right strip mirrors the left art. The mirror sits on a pseudo-element so it flips around the strip's own
+   centre; flipping .px-right itself would flip around the transform-origin above and throw it off-screen. */
+.px-right::before { content:""; position:absolute; inset:0; background:var(--px-edge-art) 0 0 / var(--px-edge-tile) repeat-y; transform:scaleX(-1); }
+.px-mid { position:relative; z-index:1; padding:1px 0; }   /* the existing page, unchanged; 1px padding stops margin collapse */
+
+/* Fennick peeking out of the left trees, with a slow, small peek-and-hide every few seconds */
+.px-fox { position:absolute; top:430px; left:55%; width:110px; height:auto; transform-origin:0 70%; animation:px-peek 9s ease-in-out infinite; }
+@keyframes px-peek { 0%,70%,100% { transform:translateX(-28px) rotate(-4deg); } 78%,92% { transform:translateX(0) rotate(3deg); } }
+/* A soft gold shimmer that slides along the bottom edge of the banner */
+.hero { position:relative; }
+.hero::after { content:""; display:block; height:2px; margin-top:-2px; position:relative;
+  background:linear-gradient(90deg, transparent 0 40%, var(--lgold) 50%, transparent 60% 100%) 0 0 / 300% 100%;
+  animation:px-shimmer 7s linear infinite; }
+@keyframes px-shimmer { from { background-position:100% 0; } to { background-position:-200% 0; } }
+
+/* Browsers that understand image-set() with type() get WebP and the @2x files; the rest keep the PNGs above. */
+@supports (background-image: image-set(url("x.webp") type("image/webp") 1x)) {
+  .px-back { background-image:
+    linear-gradient(90deg, var(--deep), transparent 14%, transparent 86%, var(--deep)), var(--px-back-set); }
+  .px-front, .px-right::before { background-image:var(--px-edge-set); }
+  .px-right { background-image:none; }
+}
+
+/* Hero: the Trailblazer art has empty space on the right; the wordmark and tagline sit there as real text in Cinzel. */
+.hero-art { position:relative; }
+.hero-title { position:absolute; left:62%; top:24%; margin:0; font-family:"Cinzel",serif; font-weight:700;
+  font-size:clamp(28px,4.6vw,64px); line-height:1.05; color:var(--lgold); letter-spacing:.02em; text-align:left;
+  text-shadow:0 3px 10px rgba(0,0,0,.55); }
+.hero-title span { display:block; color:var(--gold); }   /* second line: ADDONS */
+.hero-tagline { position:absolute; left:62%; top:66%; margin:0; padding-top:10px; border-top:2px solid var(--gold);
+  font-family:"Cinzel",serif; font-weight:700; font-size:clamp(13px,1.4vw,20px); color:var(--cream);
+  text-shadow:0 2px 6px rgba(0,0,0,.6); }
+/* Phones show the mobile banner, which already has the wordmark painted in, so the text copy would be a duplicate. */
+@media (max-width:600px) { .hero-title, .hero-tagline { display:none; } }
+
+/* Narrow screens: the side art would cover text, so it goes away and the page scrolls normally. */
+@media (max-width:900px){
+  .px-front { display:none; }
+  .px-back { transform:none; height:100%; }
+}
+/* Reduced motion: no parallax, no animation. Everything is drawn flat and still. */
+@media (prefers-reduced-motion:reduce){
+  .px { perspective:none; scroll-behavior:auto; }
+  .px-layer { transform:none !important; will-change:auto; }
+  .px-front, .px-back { height:100%; }
+  .px-fox { animation:none; transform:none; }
+  .hero::after { animation:none; background:var(--gold); opacity:.5; }
+}

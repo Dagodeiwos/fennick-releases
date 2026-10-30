@@ -10,9 +10,19 @@
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<!-- Parallax: .px is the scrolling box; the layers are decoration only (see the parallax block in style.css) -->
+<div class="px" tabindex="-1" autofocus>
+<div class="px-scene">
+<div class="px-layer px-back" aria-hidden="true"></div>
+<div class="px-layer px-front px-left" aria-hidden="true"><picture><source srcset="/assets/parallax/fox-peek.webp 1x, /assets/parallax/fox-peek@2x.webp 2x" type="image/webp"><img class="px-fox" src="/assets/parallax/fox-peek.png" srcset="/assets/parallax/fox-peek.png 1x, /assets/parallax/fox-peek@2x.png 2x" alt="" width="160" height="150" loading="lazy" decoding="async"></picture></div>
+<div class="px-layer px-front px-right" aria-hidden="true"></div>
+<div class="px-mid">
 <main class="panel">
   <h1>Page not found</h1>
   <p>This trail goes nowhere. <a class="link" href="/">Back to Fennick's Addons</a>.</p>
 </main>
+</div>
+</div>
+</div>
 </body>
 </html>

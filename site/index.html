@@ -28,14 +28,29 @@
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<!-- Parallax: .px is the scrolling box; the layers are decoration only (see the parallax block in style.css) -->
+<div class="px" tabindex="-1" autofocus>
+<div class="px-scene">
+<div class="px-layer px-back" aria-hidden="true"></div>
+<div class="px-layer px-front px-left" aria-hidden="true"><picture><source srcset="/assets/parallax/fox-peek.webp 1x, /assets/parallax/fox-peek@2x.webp 2x" type="image/webp"><img class="px-fox" src="/assets/parallax/fox-peek.png" srcset="/assets/parallax/fox-peek.png 1x, /assets/parallax/fox-peek@2x.png 2x" alt="" width="160" height="150" loading="lazy" decoding="async"></picture></div>
+<div class="px-layer px-front px-right" aria-hidden="true"></div>
+<div class="px-mid">
 <a class="skip" href="#download">Skip to download</a>
 <header class="hero">
+  <div class="hero-art">
   <picture>
-    <source media="(max-width:600px)" srcset="/assets/hero/hero-mobile.webp" type="image/webp">
-    <source media="(max-width:600px)" srcset="/assets/hero/hero-mobile.png">
-    <source srcset="/assets/hero/hero-desktop.webp" type="image/webp">
-    <img class="banner" src="/assets/hero/hero-desktop.png" alt="Fennick's Addons: the fennec fox emblem with the seven add-on icons" width="1600" height="560" fetchpriority="high">
+    <!-- Phones get the tall mobile banner, which has the wordmark painted in, so the HTML title below is hidden there -->
+    <source media="(max-width:600px)" srcset="/assets/hero/hero-mobile.webp" type="image/webp" width="800" height="1000">
+    <source media="(max-width:600px)" srcset="/assets/hero/hero-mobile.png" width="800" height="1000">
+    <!-- Wider screens: the text-free Trailblazer art. WebP has a sharper 2x version; browsers without WebP get the 1x PNG -->
+    <source srcset="/assets/hero/hero-trailblazer.webp 1x, /assets/hero/hero-trailblazer@2x.webp 2x" type="image/webp">
+    <img class="banner" src="/assets/hero/hero-trailblazer.png" alt="Fennick the fennec fox running along a glowing trail across a map" width="1920" height="672" fetchpriority="high">
   </picture>
+  <!-- The wordmark and tagline are real text over the art. Screen readers skip this copy (aria-hidden) because the
+       sr-only h1 below already says the title. -->
+  <p class="hero-title" aria-hidden="true">FENNICK'S <span>ADDONS</span></p>
+  <p class="hero-tagline" aria-hidden="true">Free add-ons for WoW Forever.</p>
+  </div>
   <h1 class="sr-only">Fennick's Addons</h1>
   <p class="lede">A step-by-step 1-60 leveling guide and quiet helpers that stay out of your way.</p>
   <p class="cta"><a class="btn btn-big" href="https://github.com/Dagodeiwos/fennick-releases/releases/download/suite-core1.8.0-gp4.7.0-rest1.2.4-tm1.1.2-cg1.2.0/Fennick-Suite-Install-All-core1.8.0-gp4.7.0-rest1.2.4-tm1.1.2-cg1.2.0.zip">Download the install-all bundle</a> <a class="btn" href="#addons">See the add-ons</a> <a class="btn" href="/compatibility.html">Compatibility</a></p>
@@ -150,5 +165,8 @@
     <p>Which WoW versions and other add-ons work with Fennick: <a class="link" href="/compatibility.html">Compatibility</a>. Bugs: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/issues">GitHub issues</a>.</p>
   </footer>
 </main>
+</div>
+</div>
+</div>
 </body>
 </html>

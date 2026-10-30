@@ -28,6 +28,13 @@
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+<!-- Parallax: .px is the scrolling box; the layers are decoration only (see the parallax block in style.css) -->
+<div class="px" tabindex="-1" autofocus>
+<div class="px-scene">
+<div class="px-layer px-back" aria-hidden="true"></div>
+<div class="px-layer px-front px-left" aria-hidden="true"><picture><source srcset="/assets/parallax/fox-peek.webp 1x, /assets/parallax/fox-peek@2x.webp 2x" type="image/webp"><img class="px-fox" src="/assets/parallax/fox-peek.png" srcset="/assets/parallax/fox-peek.png 1x, /assets/parallax/fox-peek@2x.png 2x" alt="" width="160" height="150" loading="lazy" decoding="async"></picture></div>
+<div class="px-layer px-front px-right" aria-hidden="true"></div>
+<div class="px-mid">
 <main class="panel">
   <p class="crumb"><a class="link" href="/">Fennick's Addons</a> / Fennick&#x27;s Beast Core · <a class="link" href="/compatibility.html">Compatibility</a></p>
   <h1><img src="/assets/BeastCore-64.png" alt="" width="48" height="48"> Fennick&#x27;s Beast Core</h1>
@@ -47,5 +54,8 @@
     <p>Which WoW versions and other add-ons work with Fennick: <a class="link" href="/compatibility.html">Compatibility</a>. Bugs: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/issues">GitHub issues</a>.</p>
   </footer>
 </main>
+</div>
+</div>
+</div>
 </body>
 </html>
