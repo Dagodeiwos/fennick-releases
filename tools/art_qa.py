@@ -2,7 +2,7 @@
   python3 tools/art_qa.py              full art accuracy checks (run after build_assets.py and build_site.py; see ART_QA.md)
   python3 tools/art_qa.py --changed    bookkeeping for the images changed since the merge base (RANGE env, default
                                        origin/main...HEAD, plus the working tree): every changed image needs a checklist line
-                                       (in tools/art_claims.json, reviews/artzy/*.md as "<file> | pass/fix | note", or ART_NOTES);
+                                       (in tools/art_claims.json, or as "<file> | pass/fix | note" in the ART_NOTES file);
                                        add-on versions on the site vs the .toc files are listed (informational: the site follows
                                        releases). The full checks also run when a site image or page changed.
 Exit 1 on any failure."""
@@ -48,7 +48,7 @@ def git(*a): return subprocess.run(['git','-C',R,*a],capture_output=True,text=Tr
 def changed_bookkeeping(rng):
     files={f for f in git('diff','--name-only','--diff-filter=AM',rng)+git('diff','--name-only','--diff-filter=AM')+git('ls-files','--others','--exclude-standard') if f.endswith(IMG)}
     moved={l.split('\t')[-1] for l in git('diff','--name-status','-M','-C',rng) if l[:1] in 'RC' and l[1:4]=='100'}
-    notes=''.join(open(p,encoding='utf-8').read() for p in glob.glob(R+'/reviews/artzy/*.md'))
+    notes=''
     if os.environ.get('ART_NOTES') and os.path.exists(os.environ['ART_NOTES']): notes+=open(os.environ['ART_NOTES'],encoding='utf-8').read()
     claimed={os.path.splitext(im['file'])[0] for im in C['images']}
     missing=[]

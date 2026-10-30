@@ -1,7 +1,10 @@
-# fennickaddons.dev landing page
+# fennickaddons.dev
 
-Static files only (`index.html`, `style.css`). No build step, no scripts, no tracking.
+This folder is the whole site: static HTML, one style sheet, images and `data/compat.json`. There is no build step, no script and no tracking. Cloudflare serves the folder as static assets (see `wrangler.jsonc` in the public repo).
 
-**Before publishing:** the Ko-fi (`https://ko-fi.com/J5M529GC4X`) and GitHub Sponsors (`https://github.com/sponsors/Dagodeiwos`) buttons in `index.html` are placeholders. Downloads, changelog and bug reports point at the public repo Dagodeiwos/fennick-releases.
+- `_headers` sets the security headers on every response.
+- `.assetsignore` keeps this README and other notes from being served.
+- The donation section in `index.html` is commented out and stays hidden until I open donations.
+- Downloads, the changelog and bug reports link to https://github.com/Dagodeiwos/fennick-releases.
 
-`.dev` domains are HTTPS-only (HSTS preload), so the site won't load until the certificate is issued.
+`.dev` domains are HTTPS-only (HSTS preload).

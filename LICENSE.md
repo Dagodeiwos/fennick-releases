@@ -72,4 +72,4 @@ The **licensor** is the individual or entity offering these terms, and the **sof
 
 **Use** means anything you do with the software requiring one of your licenses.
 
-Required Notice: Copyright (c) 2026 Jeffery Loran Holliday (https://github.com/Dagodeiwos)
+Required Notice: Copyright (c) 2026 Fennick (https://github.com/Dagodeiwos)
