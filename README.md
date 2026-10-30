@@ -32,7 +32,7 @@ newer Beast Core says so in one chat line and stays off.
 ## Principles
 These are the rules every Fennick add-on follows:
 1. One window and one thing to do next. Other modules add one short line each.
-2. No talent or spec recommendations, and profession content only for professions you have or picked.
+2. No build or spec recommendations, and profession content only for professions you have or picked.
 3. Gear advice is the quest reward pick and nothing else.
 4. No sounds unless you switch them on, and nothing can be imported. Copy boxes only copy out.
 5. Nothing changes Blizzard's protected UI during combat.
