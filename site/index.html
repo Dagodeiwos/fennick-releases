@@ -39,14 +39,18 @@
 <header class="hero">
   <div class="hero-art">
   <picture>
-    <!-- Phones get the tall mobile banner, which has the wordmark painted in, so the HTML title below is hidden there -->
-    <source media="(max-width:600px)" srcset="/assets/hero/hero-mobile.webp" type="image/webp" width="800" height="1000">
-    <source media="(max-width:600px)" srcset="/assets/hero/hero-mobile.png" width="800" height="1000">
+    <!-- Phones (600px and narrower) get a 4:3 crop of the same art. Its bottom band fades into the page colour,
+         and the HTML wordmark below sits on that band. width/height on the <source> let the browser reserve
+         the right 4:3 space before the image arrives, so nothing jumps. -->
+    <source media="(max-width:600px)" type="image/webp" width="800" height="600"
+            srcset="/assets/hero/hero-trailblazer-mobile.webp 1x, /assets/hero/hero-trailblazer-mobile@2x.webp 2x">
+    <source media="(max-width:600px)" width="800" height="600"
+            srcset="/assets/hero/hero-trailblazer-mobile.png 1x, /assets/hero/hero-trailblazer-mobile@2x.png 2x">
     <!-- Wider screens: the text-free Trailblazer art. WebP has a sharper 2x version; browsers without WebP get the 1x PNG -->
-    <source srcset="/assets/hero/hero-trailblazer.webp 1x, /assets/hero/hero-trailblazer@2x.webp 2x" type="image/webp">
-    <img class="banner" src="/assets/hero/hero-trailblazer.png" alt="Fennick the fennec fox running along a glowing trail across a map" width="1920" height="672" fetchpriority="high">
+    <source type="image/webp" srcset="/assets/hero/hero-trailblazer.webp 1x, /assets/hero/hero-trailblazer@2x.webp 2x">
+    <img class="banner" src="/assets/hero/hero-trailblazer.png" alt="Fennick the fennec fox leaping across a map, trailing a glowing route" width="1920" height="672" fetchpriority="high">
   </picture>
-  <!-- The wordmark and tagline are real text over the art. Screen readers skip this copy (aria-hidden) because the
+  <!-- The wordmark and tagline are real text over the art (on phones: over the faded bottom band). Screen readers skip this copy (aria-hidden) because the
        sr-only h1 below already says the title. -->
   <p class="hero-title" aria-hidden="true">FENNICK'S <span>ADDONS</span></p>
   <p class="hero-tagline" aria-hidden="true">Free add-ons for WoW Forever.</p>

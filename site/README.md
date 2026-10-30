@@ -16,4 +16,4 @@ The pages scroll inside `.px` with three layers (back art, the content, front ed
 - `back-map-tile`: far background map tile, repeats down the page (1600 wide; fades into the page colour at its sides on wider screens).
 - `edge-left`: left edge strip, mirrored for the right (240 wide, repeats down).
 - `fox-peek`: Fennick peeking out of the left edge (the `<img class="px-fox">` in each page).
-- The home page banner is `assets/hero/hero-trailblazer` with the wordmark as HTML text (`.hero-title`, `.hero-tagline`).
+- The home page banner is `assets/hero/hero-trailblazer` (phones: the 4:3 `hero-trailblazer-mobile`) with the wordmark as HTML text (`.hero-title`, `.hero-tagline`).
