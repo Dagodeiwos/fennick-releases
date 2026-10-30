@@ -26,16 +26,18 @@
 <meta name="twitter:image:alt" content="Fennick&#x27;s Trailmarks icon and summary">
 <link rel="preload" href="/assets/fonts/Cinzel-wght.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
+<script src="/assets/cameo.js" defer></script>
 </head>
 <body>
 <!-- Parallax: .px is the scrolling box; the layers are decoration only (see the parallax block in style.css) -->
 <div class="px" tabindex="-1" autofocus>
 <div class="px-scene">
 <div class="px-layer px-back" aria-hidden="true"></div>
-<div class="px-layer px-front px-left" aria-hidden="true"><picture><source srcset="/assets/parallax/fox-peek.webp 1x, /assets/parallax/fox-peek@2x.webp 2x" type="image/webp"><img class="px-fox" src="/assets/parallax/fox-peek.png" srcset="/assets/parallax/fox-peek.png 1x, /assets/parallax/fox-peek@2x.png 2x" alt="" width="160" height="150" loading="lazy" decoding="async"></picture></div>
+<div class="px-layer px-front px-left" aria-hidden="true"></div>
 <div class="px-layer px-front px-right" aria-hidden="true"></div>
 <div class="px-mid">
 <main class="panel">
+    <div class="mx-anchor mx-intro" aria-hidden="true"><span class="mx-slot mx-right mx-wisp mx-y40 mx-ph3"><picture><source type="image/webp" srcset="/assets/marsh/wisp.webp 1x, /assets/marsh/wisp@2x.webp 2x"><img src="/assets/marsh/wisp.png" srcset="/assets/marsh/wisp.png 1x, /assets/marsh/wisp@2x.png 2x" alt="" width="512" height="64" loading="lazy" decoding="async"></picture></span><span class="mx-slot mx-right mx-dragonfly mx-y420 mx-ph3"><picture><source type="image/webp" srcset="/assets/marsh/dragonfly-right.webp 1x, /assets/marsh/dragonfly-right@2x.webp 2x"><img src="/assets/marsh/dragonfly-right.png" srcset="/assets/marsh/dragonfly-right.png 1x, /assets/marsh/dragonfly-right@2x.png 2x" alt="" width="384" height="64" loading="lazy" decoding="async"></picture></span><span class="mx-slot mx-right mx-dragonfly mx-y800 mx-ph2"><picture><source type="image/webp" srcset="/assets/marsh/dragonfly-right.webp 1x, /assets/marsh/dragonfly-right@2x.webp 2x"><img src="/assets/marsh/dragonfly-right.png" srcset="/assets/marsh/dragonfly-right.png 1x, /assets/marsh/dragonfly-right@2x.png 2x" alt="" width="384" height="64" loading="lazy" decoding="async"></picture></span><span class="mx-slot mx-left mx-wisp-sm mx-y100 mx-ph2"><picture><source type="image/webp" srcset="/assets/marsh/wisp-sm.webp 1x, /assets/marsh/wisp-sm@2x.webp 2x"><img src="/assets/marsh/wisp-sm.png" srcset="/assets/marsh/wisp-sm.png 1x, /assets/marsh/wisp-sm@2x.png 2x" alt="" width="320" height="40" loading="lazy" decoding="async"></picture></span><span class="mx-slot mx-left mx-wisp mx-y620 mx-ph5"><picture><source type="image/webp" srcset="/assets/marsh/wisp.webp 1x, /assets/marsh/wisp@2x.webp 2x"><img src="/assets/marsh/wisp.png" srcset="/assets/marsh/wisp.png 1x, /assets/marsh/wisp@2x.png 2x" alt="" width="512" height="64" loading="lazy" decoding="async"></picture></span><span class="mx-slot mx-left mx-wisp mx-y1160 mx-ph1"><picture><source type="image/webp" srcset="/assets/marsh/wisp.webp 1x, /assets/marsh/wisp@2x.webp 2x"><img src="/assets/marsh/wisp.png" srcset="/assets/marsh/wisp.png 1x, /assets/marsh/wisp@2x.png 2x" alt="" width="512" height="64" loading="lazy" decoding="async"></picture></span></div>
   <p class="crumb"><a class="link" href="/">Fennick's Addons</a> / Fennick&#x27;s Trailmarks · <a class="link" href="/compatibility.html">Compatibility</a></p>
   <h1><img src="/assets/Trailmarks-64.png" alt="" width="48" height="48"> Fennick&#x27;s Trailmarks</h1>
   <p class="meta"><span class="badge">Optional</span> Version 1.1.2. Needs Fennick's Beast Core.</p>
@@ -46,14 +48,19 @@
   <ul class="feat"><li>Records ore and herb nodes, treasure chests, quest targets and quest givers</li><li>13 ore and 28 herb kinds, each with its own pin and filter</li><li>Places with 6 or more finds show as shaded areas</li><li>Per-type toggles, pin size and area opacity</li><li>Share my finds as read-only copy text</li></ul>
   <p class="cta"><a class="btn btn-big" href="https://github.com/Dagodeiwos/fennick-releases/releases/download/suite-core1.8.0-gp4.7.0-rest1.2.4-tm1.1.2-cg1.2.0/Fennick-Suite-Install-All-core1.8.0-gp4.7.0-rest1.2.4-tm1.1.2-cg1.2.0.zip">Download the install-all bundle</a> <a class="btn" href="https://github.com/Dagodeiwos/fennick-releases/releases">All releases</a></p>
   <p>Changes: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/blob/main/CHANGELOG.md">CHANGELOG.md</a>. Bugs: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/issues/new/choose">open a bug report</a>.</p>
-  <footer>
+</main>
+<footer class="ftr">
+  <!-- Marsh footer scene (decoration only): a still plate plus animated water, Fennick chasing a frog, grass and insects, all lazy-loaded.
+       See the footer block in style.css. The text below is real text set on the soil band. -->
+  <div class="ftr-art" aria-hidden="true"><span class="ftr-layer ftr-plate"><picture><source media="(max-width:600px)" type="image/webp" srcset="/assets/footer/ftr-plate-mobile.webp"><source media="(max-width:600px)" srcset="/assets/footer/ftr-plate-mobile.png"><source type="image/webp" srcset="/assets/footer/ftr-plate.webp 1x, /assets/footer/ftr-plate@2x.webp 1.7x"><img src="/assets/footer/ftr-plate.png" alt="" width="1920" height="640" loading="lazy" decoding="async"></picture></span><span class="ftr-layer ftr-water"><picture><source media="(prefers-reduced-motion: reduce)" type="image/webp" srcset="/assets/footer/ftr-water-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="/assets/footer/ftr-water-still.png"><source type="image/webp" srcset="/assets/footer/ftr-water.webp"><img src="/assets/footer/ftr-water.png" alt="" width="7680" height="60" loading="lazy" decoding="async"></picture></span><span class="ftr-layer ftr-fox"><picture><source media="(prefers-reduced-motion: reduce)" type="image/webp" srcset="/assets/footer/ftr-fox-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="/assets/footer/ftr-fox-still.png"><source type="image/webp" srcset="/assets/footer/ftr-fox.webp"><img src="/assets/footer/ftr-fox.png" alt="" width="3840" height="800" loading="lazy" decoding="async"></picture></span><span class="ftr-layer ftr-grass"><picture><source media="(prefers-reduced-motion: reduce)" type="image/webp" srcset="/assets/footer/ftr-grass-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="/assets/footer/ftr-grass-still.png"><img src="/assets/footer/ftr-grass.webp" alt="" width="11520" height="220" loading="lazy" decoding="async"></picture></span><span class="ftr-layer ftr-insects"><picture><source media="(prefers-reduced-motion: reduce)" type="image/webp" srcset="/assets/footer/ftr-insects-still.webp"><source media="(prefers-reduced-motion: reduce)" srcset="/assets/footer/ftr-insects-still.png"><source type="image/webp" srcset="/assets/footer/ftr-insects.webp"><img src="/assets/footer/ftr-insects.png" alt="" width="9440" height="260" loading="lazy" decoding="async"></picture></span></div>
+  <div class="ftr-text">
     <p>Fennick's Addons is a fan project, not affiliated with or endorsed by Blizzard Entertainment. World of Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc.</p>
     <p>License: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/blob/main/LICENSE.md">PolyForm Noncommercial 1.0.0</a>. In plain words: free to download and use, for noncommercial purposes only; nobody may sell it.</p>
     <p>Cinzel font by the Cinzel Project Authors, <a class="link" href="/assets/fonts/OFL.txt">SIL Open Font License 1.1</a>. Feature images are mockups, not in-game screenshots.</p>
-    <p>Last updated: Oct 27, 2026.</p>
+    <p>Last updated: <time datetime="2026-10">October 2026</time>.</p>
     <p>Which WoW versions and other add-ons work with Fennick: <a class="link" href="/compatibility.html">Compatibility</a>. Bugs: <a class="link" href="https://github.com/Dagodeiwos/fennick-releases/issues">GitHub issues</a>.</p>
-  </footer>
-</main>
+  </div>
+</footer>
 </div>
 </div>
 </div>

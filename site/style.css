@@ -74,7 +74,7 @@ table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
      the content stays at z = 0 and moves at a normal 1x.
    - The layers are absolutely positioned behind/around the content, so they never cause layout shift.
 
-   To change the art: edit only the file names in this block. The fox is an <img> in each page (class px-fox).
+   To change the art: edit only the file names in this block.
    =================================================================================================== */
 :root {
   /* Each art slot has a plain PNG (works everywhere) and an image-set() that lets the browser pick WebP, and the
@@ -82,7 +82,7 @@ table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
      @supports rule below), because a var() that turns out invalid would leave the layer with no image at all. */
   --px-back-art: url("/assets/parallax/back-map-tile.png");     /* far background (a map), repeats down the page */
   --px-back-set: image-set(url("/assets/parallax/back-map-tile.webp") type("image/webp") 1x,
-                           url("/assets/parallax/back-map-tile@2x.webp") type("image/webp") 2x,
+                           url("/assets/parallax/back-map-tile@2x.webp") type("image/webp") 1.44x,   /* 2304 wide (1.44x) keeps it under 16 MB decoded */
                            url("/assets/parallax/back-map-tile.png") 1x);
   --px-back-tile: 1600px auto;                                   /* size of one back tile */
   --px-back-w: 1600px;                                           /* its width, for the edge fade */
@@ -121,36 +121,1139 @@ body { overflow:hidden; }                 /* the page itself no longer scrolls; 
     var(--deep);
   transform:translate3d(0,0,var(--px-back-z)) scale(var(--px-back-scale));
 }
-/* The front strips move faster, so they must be taller than the page to still cover the bottom. Height divided by
-   the scale makes them exactly as tall as the page once scaled (same scroll-length reason as the back layer). */
-.px-front { width:var(--px-edge-w); height:calc(100% / var(--px-front-scale)); z-index:2; background:var(--px-edge-art) 0 0 / var(--px-edge-tile) repeat-y; }
-.px-left  { left:0;  transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale)); transform-origin:calc(50vw) 0; }
-.px-right { right:0; background:none; transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale)); transform-origin:calc(var(--px-edge-w) - 50vw) 0; }
-/* The right strip mirrors the left art. The mirror sits on a pseudo-element so it flips around the strip's own
-   centre; flipping .px-right itself would flip around the transform-origin above and throw it off-screen. */
-.px-right::before { content:""; position:absolute; inset:0; background:var(--px-edge-art) 0 0 / var(--px-edge-tile) repeat-y; transform:scaleX(-1); }
-.px-mid { position:relative; z-index:1; padding:1px 0; }   /* the existing page, unchanged; 1px padding stops margin collapse */
+/* ===== Composed edge scene ==========================================================================
+   Each edge strip is built from pieces, top to bottom:
+     top cap     branches that frame the banner (the banner itself also moves at the edge speed, see .hero-art)
+     middle      a long irregular run of 4 segments (seg-a ... seg-d), different order on each side
+     bottom cap  marsh ground and water, pinned so it lands exactly at the bottom of the window at the page end
+   underneath all of it the old willow strip repeats, so a page taller than the whole sequence never shows a gap.
 
-/* Fennick peeking out of the left trees, with a slow, small peek-and-hide every few seconds */
-.px-fox { position:absolute; top:430px; left:55%; width:110px; height:auto; transform-origin:0 70%; animation:px-peek 9s ease-in-out infinite; }
-@keyframes px-peek { 0%,70%,100% { transform:translateX(-28px) rotate(-4deg); } 78%,92% { transform:translateX(0) rotate(3deg); } }
+   All pieces share the strip's width; heights follow from the art's own proportions (see the --edge-*-h sizes),
+   so the art is never stretched. Art spec for every piece: 240px wide at 1x (480px for @2x), PNG + WebP + @2x WebP,
+   transparent where the strip should show the background map. Heights: cap-top 640, segments 400 each,
+   cap-bottom 560 (at 1x). Segment tops and bottoms must join any other segment, since the order is mixed.
+   ================================================================================================== */
+:root {
+  --edge-top:    url("/assets/parallax/edge/cap-top.png");
+  --edge-bottom: url("/assets/parallax/edge/cap-bottom.png");
+  --edge-seg-a:  url("/assets/parallax/edge/seg-a.png");
+  --edge-seg-b:  url("/assets/parallax/edge/seg-b.png");
+  --edge-seg-c:  url("/assets/parallax/edge/seg-c.png");
+  --edge-seg-d:  url("/assets/parallax/edge/seg-d.png");
+  /* The right strip has its own pieces (drawn facing the page from the right), so it is no longer a mirror. */
+  --edge-top-right:  url("/assets/parallax/edge/cap-top-right.png");
+  --edge-bottom-right: url("/assets/parallax/edge/cap-bottom-right.png");
+  --edge-seg-a-right: url("/assets/parallax/edge/seg-a-right.png");
+  --edge-seg-b-right: url("/assets/parallax/edge/seg-b-right.png");
+  --edge-seg-c-right: url("/assets/parallax/edge/seg-c-right.png");
+  --edge-seg-d-right: url("/assets/parallax/edge/seg-d-right.png");
+  /* Heights scale with the strip width (art is 240 wide at 1x), so a narrower margin shrinks the art evenly. */
+  --edge-top-h:    calc(var(--px-edge-w) * 640 / 240);
+  --edge-seg-h:    calc(var(--px-edge-w) * 400 / 240);
+  --edge-bottom-h: calc(var(--px-edge-w) * 560 / 240);
+}
+/* edge-seq:begin (generated by tools/edge_sequence.py, do not edit by hand) */
+/* left:  bcbdcbcdbcdabdbabcdcbadbcabadcacbdbc */
+/* right: badbadacadbdcbdcdbcbacbdbacdcbcabcbd */
+:root {
+  --edge-seq-left:
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 0 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 1 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 2 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 3 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 4 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 5 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 6 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 7 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 8 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 9 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 10 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a) 0 calc(var(--edge-top-h) + 11 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 12 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 13 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 14 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a) 0 calc(var(--edge-top-h) + 15 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 16 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 17 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 18 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 19 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 20 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a) 0 calc(var(--edge-top-h) + 21 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 22 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 23 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 24 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a) 0 calc(var(--edge-top-h) + 25 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 26 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a) 0 calc(var(--edge-top-h) + 27 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 28 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 29 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a) 0 calc(var(--edge-top-h) + 30 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 31 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 32 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d) 0 calc(var(--edge-top-h) + 33 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b) 0 calc(var(--edge-top-h) + 34 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c) 0 calc(var(--edge-top-h) + 35 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat;
+  --edge-seq-right:
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 0 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a-right) 0 calc(var(--edge-top-h) + 1 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 2 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 3 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a-right) 0 calc(var(--edge-top-h) + 4 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 5 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a-right) 0 calc(var(--edge-top-h) + 6 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 7 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a-right) 0 calc(var(--edge-top-h) + 8 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 9 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 10 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 11 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 12 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 13 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 14 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 15 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 16 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 17 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 18 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 19 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a-right) 0 calc(var(--edge-top-h) + 20 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 21 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 22 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 23 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 24 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a-right) 0 calc(var(--edge-top-h) + 25 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 26 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 27 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 28 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 29 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 30 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-a-right) 0 calc(var(--edge-top-h) + 31 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 32 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-c-right) 0 calc(var(--edge-top-h) + 33 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-b-right) 0 calc(var(--edge-top-h) + 34 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat,
+    var(--edge-seg-d-right) 0 calc(var(--edge-top-h) + 35 * var(--edge-seg-h)) / 100% var(--edge-seg-h) no-repeat;
+}
+/* edge-seq:end */
+/* Strip height: the strip moves at 1/scale speed, so by the last scroll position it has travelled
+   (page height - window height) / scale. Making it exactly that plus one window tall puts its bottom edge (and the
+   bottom cap) on the bottom of the window at the page end. It's still shorter than page / scale, so it never
+   adds scroll length (Chrome counts the scaled box, as with the back layer). */
+.px-front { width:var(--px-edge-w); height:calc((100% - 100vh) / var(--px-front-scale) + 100vh); }
+.px-left, .px-right::before {
+  background:
+    var(--edge-top-right) 0 0 / 100% var(--edge-top-h) no-repeat,
+    var(--edge-bottom-right) 0 100% / 100% var(--edge-bottom-h) no-repeat,
+    var(--edge-seq-left),
+    var(--px-edge-art) 0 0 / var(--px-edge-tile) repeat-y;
+}
+.px-right::before {
+  background:
+    var(--edge-top-right) 0 0 / 100% var(--edge-top-h) no-repeat,
+    var(--edge-bottom-right) 0 100% / 100% var(--edge-bottom-h) no-repeat,
+    var(--edge-seq-right),
+    var(--px-edge-art) 0 0 / var(--px-edge-tile) repeat-y;
+}
+.px-left  { left:0;  transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale)); transform-origin:calc(50vw) 0; }
+.px-right { right:0; transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale)); transform-origin:calc(var(--px-edge-w) - 50vw) 0; }
+/* The right strip paints on a pseudo-element filling it. The art has its own -right pieces now, so nothing is
+   mirrored; its sequence is its own (--edge-seq-right) as well. */
+.px-right::before { content:""; position:absolute; inset:0; }
+.px-mid { position:relative; padding:1px 0; }   /* the existing page, unchanged; 1px padding stops margin collapse */
+/* No z-index on .px-mid or the edge strips: inside the 3D scene the browser orders layers by their depth, and a
+   z-index would override that and paint the edge foliage over the marsh critters that live inside the content. */
+
 /* A soft gold shimmer that slides along the bottom edge of the banner */
 .hero { position:relative; }
-.hero::after { content:""; display:block; height:2px; margin-top:-2px; position:relative;
+.hero::after { content:""; display:block; height:2px; margin-top:-2px; position:relative; pointer-events:none;
   background:linear-gradient(90deg, transparent 0 40%, var(--lgold) 50%, transparent 60% 100%) 0 0 / 300% 100%;
-  animation:px-shimmer 7s linear infinite; }
+  animation:px-shimmer 10s linear infinite;   /* was 7s; now the header's 10 s pace */ }
 @keyframes px-shimmer { from { background-position:100% 0; } to { background-position:-200% 0; } }
 
 /* Browsers that understand image-set() with type() get WebP and the @2x files; the rest keep the PNGs above. */
 @supports (background-image: image-set(url("x.webp") type("image/webp") 1x)) {
   .px-back { background-image:
     linear-gradient(90deg, var(--deep), transparent 14%, transparent 86%, var(--deep)), var(--px-back-set); }
-  .px-front, .px-right::before { background-image:var(--px-edge-set); }
-  .px-right { background-image:none; }
+  /* Same pieces, as WebP with @2x where the browser can choose. Overriding the variables (not the background
+     shorthand) keeps every layer's position and size from the rules above. */
+  :root {
+    --px-edge-art: var(--px-edge-set);
+    --edge-top:    image-set(url("/assets/parallax/edge/cap-top.webp") type("image/webp") 1x, url("/assets/parallax/edge/cap-top@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/cap-top.png") 1x);
+    --edge-bottom: image-set(url("/assets/parallax/edge/cap-bottom.webp") type("image/webp") 1x, url("/assets/parallax/edge/cap-bottom@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/cap-bottom.png") 1x);
+    --edge-seg-a:  image-set(url("/assets/parallax/edge/seg-a.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-a@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-a.png") 1x);
+    --edge-seg-b:  image-set(url("/assets/parallax/edge/seg-b.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-b@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-b.png") 1x);
+    --edge-seg-c:  image-set(url("/assets/parallax/edge/seg-c.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-c@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-c.png") 1x);
+    --edge-seg-d:  image-set(url("/assets/parallax/edge/seg-d.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-d@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-d.png") 1x);
+    --edge-top-right: image-set(url("/assets/parallax/edge/cap-top-right.webp") type("image/webp") 1x, url("/assets/parallax/edge/cap-top-right@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/cap-top-right.png") 1x);
+    --edge-bottom-right: image-set(url("/assets/parallax/edge/cap-bottom-right.webp") type("image/webp") 1x, url("/assets/parallax/edge/cap-bottom-right@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/cap-bottom-right.png") 1x);
+    --edge-seg-a-right: image-set(url("/assets/parallax/edge/seg-a-right.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-a-right@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-a-right.png") 1x);
+    --edge-seg-b-right: image-set(url("/assets/parallax/edge/seg-b-right.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-b-right@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-b-right.png") 1x);
+    --edge-seg-c-right: image-set(url("/assets/parallax/edge/seg-c-right.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-c-right@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-c-right.png") 1x);
+    --edge-seg-d-right: image-set(url("/assets/parallax/edge/seg-d-right.webp") type("image/webp") 1x, url("/assets/parallax/edge/seg-d-right@2x.webp") type("image/webp") 2x, url("/assets/parallax/edge/seg-d-right.png") 1x);
+  }
 }
 
 /* Hero: the Trailblazer art has empty space on the right; the wordmark and tagline sit there as real text in Cinzel. */
 .hero-art { position:relative; }
+/* The banner (art + wordmark) lives in the edge layer: same translateZ and scale as the edge strips, so it scrolls
+   at their speed, framed by the top cap. With the scale trick a layer sits in its normal place when its
+   transform-origin is at the top of the window, so I put the origin at the top of the page: 25px above the banner
+   (.px-mid's 1px padding plus the banner's 56px top margin, which merges with the hero's smaller 24px one). At scroll 0 it's exactly where it was; then it slides
+   away a little faster than the text under it, which only opens a gap and never overlaps the buttons. */
+.hero-art {
+  --hero-top: 57px;            /* .px-mid's 1px padding + the 56px gap above the banner (room for the branch canopy) */
+  margin-top:56px;
+  transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale));
+  transform-origin:50% calc(-1 * var(--hero-top));
+}
+/* ===== Header animation ============================================================================
+   Fennick runs through the branches over the banner (Artzy's marsh2 finals, final/README.md). On wide screens the
+   banner image is a fox-free plate (banner-plate) and everything that moves is in .hdr, back to front:
+     hdr-stars-a/-b (two static pieces that cross-fade), the back canopy (two static branch halves that sway),
+     three hdr-trail sparks following him, hdr-fox, the front canopy (leaves in front of him).
+   Sizes and positions are in banner pixels (the banner is 1920x672 at 1x) turned into percentages, so the
+   whole scene scales with the banner.
+
+   Sprite sheets (Fennick, the sparks, and the footer layers) are frames laid out in a grid, left to right, then
+   the next row, frame 1 top left. CSS shows one frame at a time and steps through them with steps(): one
+   animation walks the columns, a second one walks the rows. Each walks across exactly the whole sheet, so after
+   the last frame it lands on frame 1 again. Every sheet must loop by itself.
+
+   All header motion shares ONE clock, --hdr-cycle (10s; it was 8s, slowed for a calmer pace: every keyframe is in % of
+   the cycle, so Artzy's 8 s route simply plays 1.25x slower and still starts and ends on the same frame). Each sheet runs a whole number of passes per cycle
+   (--hdr-reps). Per sheet:
+     --hdr-cols, --hdr-rows   the sheet's grid (frames = cols x rows)
+     --hdr-reps               passes through all frames per --hdr-cycle (a whole number)
+     --hdr-ar                 the aspect ratio of ONE frame (width / height)
+   Fennick's route and the sparks' routes are generated keyframes (tools/hdr_fox_route.py); he is hidden in the
+   foliage at the start and end, so every cycle begins exactly like the last one ended.
+   With reduced motion the <picture> swaps each layer to its -still file (one frame) and nothing animates.
+   ================================================================================================== */
+.hdr { --hdr-cycle:10s; position:absolute; inset:0; pointer-events:none; }
+.hdr-layer, .ftr-layer { position:absolute; display:block; overflow:hidden; aspect-ratio:var(--hdr-ar); --hdr-rows:1; }
+.hdr-layer img, .ftr-layer img { display:block; max-width:none;
+  width:calc(var(--hdr-cols) * 100%); height:calc(var(--hdr-rows) * 100%);
+  /* columns: one sweep per row; rows: one sweep per pass. With one row the row animation never moves. */
+  animation:hdr-cols calc(var(--hdr-cycle) / var(--hdr-reps) / var(--hdr-rows)) steps(var(--hdr-cols)) infinite,
+            hdr-rows calc(var(--hdr-cycle) / var(--hdr-reps)) steps(var(--hdr-rows)) infinite; }
+/* translate (the x step) and transform (the y step) are separate properties, so the two animations don't fight */
+@keyframes hdr-cols { to { translate:-100% 0; } }
+@keyframes hdr-rows { to { transform:translateY(-100%); } }
+.hdr-stars, .hdr-canopy-back { z-index:0; }
+.hdr-trail { z-index:3; }                 /* above the back canopy, under the front leaves; Fennick (later in the
+                                             HTML, same z-index when he is in the mid/front layer) paints over it */
+.hdr-canopy-front { z-index:4; }
+/* Static pieces (stars, branch halves): one picture each, no sprite sheet. Their motion is opacity or sway. */
+.hdr-piece { position:absolute; display:block; }
+.hdr-piece img { display:block; width:100%; height:auto; }
+/* Stars: two 537x672 pieces at banner x20 y0 that cross-fade, twice per cycle. Artzy's curve is
+   a = .5 + .5 sin(2pi * 2t / 8); b is the inverse, which is the same animation half a pass later
+   (a negative delay, so it starts mid-pass instead of waiting). */
+.hdr-stars { left:calc(20 / 1920 * 100%); top:0; width:calc(537 / 1920 * 100%);
+  animation:hdr-twinkle calc(var(--hdr-cycle) / 2) linear infinite; }
+.hdr-stars-b { animation-delay:calc(var(--hdr-cycle) / -4); }
+/* A sine sampled every 1/8 of a pass (0%, 12.5% ... 100%); 0% and 100% are the same value. */
+@keyframes hdr-twinkle {
+  0%, 100% { opacity:.5; } 12.5% { opacity:.854; } 25% { opacity:1; } 37.5% { opacity:.854; }
+  50% { opacity:.5; } 62.5% { opacity:.146; } 75% { opacity:0; } 87.5% { opacity:.146; } }
+/* Canopies: 1920x760 boxes, their top 90px above the banner, each holding a left and a right branch half.
+   The sway hinges at the canopy top (transform-origin 50% 0): skewX(0.65deg x sin(2pi * 2t / 8)), twice a cycle. */
+.hdr-canopy { position:absolute; display:block; left:0; top:calc(-90 / 672 * 100%); width:100%; aspect-ratio:1920 / 760;
+  transform-origin:50% 0; animation:hdr-sway calc(var(--hdr-cycle) / 2) linear infinite; }
+@keyframes hdr-sway {
+  0%, 100% { transform:skewX(0deg); } 12.5% { transform:skewX(.46deg); } 25% { transform:skewX(.65deg); }
+  37.5% { transform:skewX(.46deg); } 50% { transform:skewX(0deg); } 62.5% { transform:skewX(-.46deg); }
+  75% { transform:skewX(-.65deg); } 87.5% { transform:skewX(-.46deg); } }
+/* Branch halves, placed in canopy pixels (canopy 1920x760) */
+.hdr-branches-left        { left:0;                         top:calc(1 / 760 * 100%); width:calc(953 / 1920 * 100%); }
+.hdr-branches-right       { left:calc(962 / 1920 * 100%);   top:calc(1 / 760 * 100%); width:calc(958 / 1920 * 100%); }
+.hdr-branches-front-left  { left:0;                         top:calc(1 / 760 * 100%); width:calc(861 / 1920 * 100%); }
+.hdr-branches-front-right { left:calc(1020 / 1920 * 100%);  top:calc(1 / 760 * 100%); width:calc(900 / 1920 * 100%); }
+/* Its piece point (x, y) lands on banner (1020 + x, y - 89): the canopy starts 90px above the banner, the piece 1px
+   into the canopy. Artzy cut it clear of the wordmark (nothing at banner x >= 1196, y >= 150), so no mask is needed. */
+/* Trail sparks: a 64x64 sheet of 8 frames, 8 passes per cycle. Three copies follow Fennick's route a little late
+   (generated hdr-trail-1..3 keyframes below), fading with distance. */
+.hdr-trail { --hdr-cols:8; --hdr-frames:8; --hdr-reps:8; --hdr-ar:1; width:calc(64 / 1920 * 100%); }
+.hdr-trail-1 { animation:hdr-trail-1 var(--hdr-cycle) linear infinite; }
+.hdr-trail-2 { animation:hdr-trail-2 var(--hdr-cycle) linear infinite; }
+.hdr-trail-3 { animation:hdr-trail-3 var(--hdr-cycle) linear infinite; }
+/* Fennick: frame 384x272, 8 frames, 12 strides per cycle, drawn 1.8x big (the route's css_scale shrinks him).
+   The route puts his paw point (192,266 in the frame) on the bough; transform-origin is that same point, so the
+   lean and the size change happen around his paws. */
+.hdr-fox { --hdr-cols:8; --hdr-frames:8; --hdr-reps:12; --hdr-ar:384 / 272;
+  width:calc(384 / 1920 * 100%); transform-origin:50% calc(266 / 272 * 100%); z-index:3;
+  animation:hdr-fox-route var(--hdr-cycle) linear infinite; }
+/* Generated by tools/hdr_fox_route.py from tools/data/hdr-fox-route.json (Artzy's route): position, lean, size,
+   opacity and which foliage he is in (z-index), plus the three trail sparks. */
+/* hdr-fox-route:begin (generated by tools/hdr_fox_route.py, do not edit by hand) */
+@keyframes hdr-fox-route {
+  0%, 100% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  0.521% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  1.041% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  1.562% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  2.084% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  2.604% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  3.125% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  3.646% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  4.166% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  4.688% { left:-6.875%; top:-19.494%; transform:rotate(-51.96deg) scale(0.3889); opacity:0; z-index:1; }
+  5.209% { left:-6.734%; top:-20.000%; transform:rotate(-51.53deg) scale(0.3889); opacity:0; z-index:1; }
+  5.729% { left:-6.380%; top:-21.250%; transform:rotate(-49.82deg) scale(0.3889); opacity:0; z-index:1; }
+  6.250% { left:-6.005%; top:-22.485%; transform:rotate(-48.55deg) scale(0.3889); opacity:0; z-index:1; }
+  6.771% { left:-5.609%; top:-23.705%; transform:rotate(-46.86deg) scale(0.3889); opacity:0.03; z-index:1; }
+  7.291% { left:-5.203%; top:-24.926%; transform:rotate(-45.20deg) scale(0.3889); opacity:0.112; z-index:1; }
+  7.812% { left:-4.771%; top:-26.116%; transform:rotate(-43.57deg) scale(0.3889); opacity:0.232; z-index:1; }
+  8.334% { left:-4.328%; top:-27.277%; transform:rotate(-41.96deg) scale(0.3889); opacity:0.376; z-index:1; }
+  8.854% { left:-3.865%; top:-28.423%; transform:rotate(-39.99deg) scale(0.3889); opacity:0.531; z-index:1; }
+  9.375% { left:-3.385%; top:-29.554%; transform:rotate(-38.45deg) scale(0.3889); opacity:0.684; z-index:1; }
+  9.896% { left:-2.896%; top:-30.640%; transform:rotate(-36.94deg) scale(0.3889); opacity:0.82; z-index:1; }
+  10.416% { left:-2.385%; top:-31.711%; transform:rotate(-35.47deg) scale(0.3889); opacity:0.926; z-index:1; }
+  10.938% { left:-1.859%; top:-32.738%; transform:rotate(-33.67deg) scale(0.3889); opacity:0.989; z-index:1; }
+  11.459% { left:-1.318%; top:-33.750%; transform:rotate(-32.28deg) scale(0.3889); opacity:1; z-index:1; }
+  11.979% { left:-0.766%; top:-34.717%; transform:rotate(-30.92deg) scale(0.3889); opacity:1; z-index:1; }
+  12.500% { left:-0.198%; top:-35.655%; transform:rotate(-29.28deg) scale(0.3889); opacity:1; z-index:1; }
+  13.021% { left:0.380%; top:-36.548%; transform:rotate(-28.00deg) scale(0.3889); opacity:1; z-index:1; }
+  13.541% { left:0.969%; top:-37.411%; transform:rotate(-26.46deg) scale(0.3889); opacity:1; z-index:1; }
+  14.062% { left:1.573%; top:-38.244%; transform:rotate(-25.27deg) scale(0.3889); opacity:1; z-index:1; }
+  14.584% { left:2.182%; top:-39.048%; transform:rotate(-23.84deg) scale(0.3889); opacity:1; z-index:1; }
+  15.104% { left:2.807%; top:-39.807%; transform:rotate(-22.46deg) scale(0.3889); opacity:1; z-index:1; }
+  15.625% { left:3.438%; top:-40.536%; transform:rotate(-21.39deg) scale(0.3889); opacity:1; z-index:1; }
+  16.146% { left:4.078%; top:-40.952%; transform:rotate(-20.11deg) scale(0.3889); opacity:1; z-index:1; }
+  16.666% { left:4.724%; top:-40.878%; transform:rotate(-18.89deg) scale(0.3889); opacity:1; z-index:1; }
+  17.188% { left:5.380%; top:-40.402%; transform:rotate(-17.94deg) scale(0.3889); opacity:1; z-index:1; }
+  17.709% { left:6.042%; top:-39.628%; transform:rotate(-16.81deg) scale(0.3889); opacity:1; z-index:1; }
+  18.229% { left:6.708%; top:-38.690%; transform:rotate(-15.72deg) scale(0.3889); opacity:1; z-index:1; }
+  18.750% { left:7.380%; top:-37.664%; transform:rotate(-14.89deg) scale(0.3889); opacity:1; z-index:1; }
+  19.271% { left:8.057%; top:-36.682%; transform:rotate(-13.89deg) scale(0.3889); opacity:1; z-index:1; }
+  19.791% { left:8.740%; top:-35.833%; transform:rotate(-12.93deg) scale(0.3889); opacity:1; z-index:1; }
+  20.312% { left:9.422%; top:-35.238%; transform:rotate(-12.00deg) scale(0.3889); opacity:1; z-index:1; }
+  20.834% { left:10.115%; top:-34.985%; transform:rotate(-11.28deg) scale(0.3889); opacity:1; z-index:1; }
+  21.344% { left:10.802%; top:-35.193%; transform:rotate(-10.40deg) scale(0.3890); opacity:1; z-index:1; }
+  21.354% { left:10.802%; top:-35.193%; transform:rotate(-10.40deg) scale(0.3890); opacity:1; z-index:3; }
+  21.875% { left:11.500%; top:-35.536%; transform:rotate(-9.54deg) scale(0.3913); opacity:1; z-index:3; }
+  22.396% { left:12.193%; top:-35.863%; transform:rotate(-8.72deg) scale(0.3967); opacity:1; z-index:3; }
+  22.916% { left:12.891%; top:-36.146%; transform:rotate(-7.92deg) scale(0.4047); opacity:1; z-index:3; }
+  23.438% { left:13.589%; top:-36.414%; transform:rotate(-7.31deg) scale(0.4149); opacity:1; z-index:3; }
+  23.959% { left:14.286%; top:-36.667%; transform:rotate(-6.56deg) scale(0.4269); opacity:1; z-index:3; }
+  24.479% { left:14.990%; top:-36.875%; transform:rotate(-5.84deg) scale(0.4402); opacity:1; z-index:3; }
+  25.000% { left:15.687%; top:-37.068%; transform:rotate(-5.15deg) scale(0.4545); opacity:1; z-index:3; }
+  25.521% { left:16.385%; top:-37.247%; transform:rotate(-4.62deg) scale(0.4692); opacity:1; z-index:3; }
+  26.041% { left:17.083%; top:-37.396%; transform:rotate(-3.98deg) scale(0.4841); opacity:1; z-index:3; }
+  26.562% { left:17.781%; top:-37.515%; transform:rotate(-3.37deg) scale(0.4986); opacity:1; z-index:3; }
+  27.084% { left:18.474%; top:-37.619%; transform:rotate(-2.79deg) scale(0.5123); opacity:1; z-index:3; }
+  27.604% { left:19.167%; top:-37.708%; transform:rotate(-2.34deg) scale(0.5249); opacity:1; z-index:3; }
+  28.125% { left:19.859%; top:-37.783%; transform:rotate(-1.77deg) scale(0.5359); opacity:1; z-index:3; }
+  28.646% { left:20.547%; top:-37.842%; transform:rotate(-1.20deg) scale(0.5448); opacity:1; z-index:3; }
+  29.166% { left:21.234%; top:-37.872%; transform:rotate(-0.74deg) scale(0.5513); opacity:1; z-index:3; }
+  29.688% { left:21.917%; top:-37.887%; transform:rotate(-0.16deg) scale(0.5549); opacity:1; z-index:3; }
+  30.209% { left:22.594%; top:-37.872%; transform:rotate(0.42deg) scale(0.5556); opacity:1; z-index:3; }
+  30.729% { left:23.266%; top:-37.857%; transform:rotate(0.89deg) scale(0.5556); opacity:1; z-index:3; }
+  31.250% { left:23.938%; top:-37.812%; transform:rotate(1.48deg) scale(0.5556); opacity:1; z-index:3; }
+  31.771% { left:24.604%; top:-37.753%; transform:rotate(1.96deg) scale(0.5556); opacity:1; z-index:3; }
+  32.291% { left:25.260%; top:-37.679%; transform:rotate(2.56deg) scale(0.5556); opacity:1; z-index:3; }
+  32.812% { left:25.917%; top:-37.589%; transform:rotate(3.04deg) scale(0.5556); opacity:1; z-index:3; }
+  33.334% { left:26.568%; top:-37.485%; transform:rotate(3.64deg) scale(0.5556); opacity:1; z-index:3; }
+  33.854% { left:27.214%; top:-37.366%; transform:rotate(4.13deg) scale(0.5556); opacity:1; z-index:3; }
+  34.375% { left:27.849%; top:-37.217%; transform:rotate(4.62deg) scale(0.5556); opacity:1; z-index:3; }
+  34.896% { left:28.484%; top:-37.068%; transform:rotate(5.24deg) scale(0.5556); opacity:1; z-index:3; }
+  35.416% { left:29.109%; top:-36.890%; transform:rotate(5.74deg) scale(0.5556); opacity:1; z-index:3; }
+  35.938% { left:29.724%; top:-36.711%; transform:rotate(6.24deg) scale(0.5556); opacity:1; z-index:3; }
+  36.459% { left:30.333%; top:-36.503%; transform:rotate(6.74deg) scale(0.5556); opacity:1; z-index:3; }
+  36.979% { left:30.938%; top:-36.295%; transform:rotate(7.37deg) scale(0.5556); opacity:1; z-index:3; }
+  37.500% { left:31.531%; top:-36.071%; transform:rotate(7.88deg) scale(0.5556); opacity:1; z-index:3; }
+  38.021% { left:32.120%; top:-35.833%; transform:rotate(8.39deg) scale(0.5556); opacity:1; z-index:3; }
+  38.541% { left:32.698%; top:-35.580%; transform:rotate(8.91deg) scale(0.5556); opacity:1; z-index:3; }
+  39.062% { left:33.271%; top:-35.312%; transform:rotate(9.43deg) scale(0.5556); opacity:1; z-index:3; }
+  39.584% { left:33.828%; top:-35.045%; transform:rotate(9.82deg) scale(0.5556); opacity:1; z-index:3; }
+  40.104% { left:34.370%; top:-35.387%; transform:rotate(-37.93deg) scale(0.5556); opacity:1; z-index:3; }
+  40.625% { left:34.854%; top:-37.991%; transform:rotate(-36.34deg) scale(0.5562); opacity:1; z-index:3; }
+  41.146% { left:35.344%; top:-40.327%; transform:rotate(-34.44deg) scale(0.5576); opacity:1; z-index:3; }
+  41.666% { left:35.833%; top:-42.366%; transform:rotate(-32.15deg) scale(0.5597); opacity:1; z-index:3; }
+  42.188% { left:36.323%; top:-44.107%; transform:rotate(-29.35deg) scale(0.5624); opacity:1; z-index:3; }
+  42.709% { left:36.807%; top:-45.565%; transform:rotate(-25.92deg) scale(0.5656); opacity:1; z-index:3; }
+  43.229% { left:37.297%; top:-46.726%; transform:rotate(-21.69deg) scale(0.5692); opacity:1; z-index:3; }
+  43.750% { left:37.786%; top:-47.604%; transform:rotate(-16.54deg) scale(0.5731); opacity:1; z-index:3; }
+  44.271% { left:38.276%; top:-48.185%; transform:rotate(-10.46deg) scale(0.5773); opacity:1; z-index:3; }
+  44.791% { left:38.760%; top:-48.482%; transform:rotate(-3.62deg) scale(0.5816); opacity:1; z-index:3; }
+  45.312% { left:39.250%; top:-48.482%; transform:rotate(3.52deg) scale(0.5859); opacity:1; z-index:3; }
+  45.834% { left:39.740%; top:-48.185%; transform:rotate(10.37deg) scale(0.5902); opacity:1; z-index:3; }
+  46.354% { left:40.229%; top:-47.604%; transform:rotate(16.47deg) scale(0.5943); opacity:1; z-index:3; }
+  46.875% { left:40.719%; top:-46.741%; transform:rotate(21.63deg) scale(0.5982); opacity:1; z-index:3; }
+  47.396% { left:41.203%; top:-45.580%; transform:rotate(25.87deg) scale(0.6018); opacity:1; z-index:3; }
+  47.916% { left:41.693%; top:-44.122%; transform:rotate(29.31deg) scale(0.6049); opacity:1; z-index:3; }
+  48.438% { left:42.182%; top:-42.381%; transform:rotate(32.12deg) scale(0.6075); opacity:1; z-index:3; }
+  48.959% { left:42.667%; top:-40.357%; transform:rotate(34.41deg) scale(0.6094); opacity:1; z-index:3; }
+  49.479% { left:43.156%; top:-38.036%; transform:rotate(36.32deg) scale(0.6107); opacity:1; z-index:3; }
+  50.000% { left:43.646%; top:-35.417%; transform:rotate(-10.12deg) scale(0.6111); opacity:1; z-index:3; }
+  50.521% { left:44.266%; top:-35.729%; transform:rotate(-9.81deg) scale(0.6114); opacity:1; z-index:3; }
+  51.041% { left:44.880%; top:-36.027%; transform:rotate(-9.49deg) scale(0.6123); opacity:1; z-index:3; }
+  51.562% { left:45.500%; top:-36.324%; transform:rotate(-9.16deg) scale(0.6137); opacity:1; z-index:3; }
+  52.084% { left:46.120%; top:-36.592%; transform:rotate(-8.73deg) scale(0.6157); opacity:1; z-index:3; }
+  52.604% { left:46.740%; top:-36.860%; transform:rotate(-8.37deg) scale(0.6182); opacity:1; z-index:3; }
+  53.125% { left:47.359%; top:-37.113%; transform:rotate(-8.00deg) scale(0.6212); opacity:1; z-index:3; }
+  53.646% { left:47.979%; top:-37.366%; transform:rotate(-7.52deg) scale(0.6247); opacity:1; z-index:3; }
+  54.166% { left:48.604%; top:-37.589%; transform:rotate(-7.12deg) scale(0.6286); opacity:1; z-index:3; }
+  54.688% { left:49.224%; top:-37.798%; transform:rotate(-6.71deg) scale(0.6330); opacity:1; z-index:3; }
+  55.209% { left:49.849%; top:-38.006%; transform:rotate(-6.17deg) scale(0.6379); opacity:1; z-index:3; }
+  55.729% { left:50.474%; top:-38.185%; transform:rotate(-5.73deg) scale(0.6431); opacity:1; z-index:3; }
+  56.250% { left:51.099%; top:-38.363%; transform:rotate(-5.27deg) scale(0.6487); opacity:1; z-index:3; }
+  56.771% { left:51.719%; top:-38.512%; transform:rotate(-4.80deg) scale(0.6547); opacity:1; z-index:3; }
+  57.291% { left:52.344%; top:-38.661%; transform:rotate(-4.19deg) scale(0.6611); opacity:1; z-index:3; }
+  57.812% { left:52.974%; top:-38.780%; transform:rotate(-3.69deg) scale(0.6677); opacity:1; z-index:3; }
+  58.334% { left:53.599%; top:-38.884%; transform:rotate(-3.17deg) scale(0.6747); opacity:1; z-index:3; }
+  58.854% { left:54.224%; top:-38.973%; transform:rotate(-2.50deg) scale(0.6820); opacity:1; z-index:3; }
+  59.375% { left:54.849%; top:-39.048%; transform:rotate(-1.95deg) scale(0.6895); opacity:1; z-index:3; }
+  59.896% { left:55.479%; top:-39.107%; transform:rotate(-1.39deg) scale(0.6973); opacity:1; z-index:3; }
+  60.416% { left:56.104%; top:-39.137%; transform:rotate(-0.81deg) scale(0.7054); opacity:1; z-index:3; }
+  60.938% { left:56.729%; top:-39.152%; transform:rotate(-0.06deg) scale(0.7136); opacity:1; z-index:3; }
+  61.459% { left:57.359%; top:-39.137%; transform:rotate(0.55deg) scale(0.7220); opacity:1; z-index:3; }
+  61.979% { left:57.984%; top:-39.107%; transform:rotate(1.18deg) scale(0.7307); opacity:1; z-index:3; }
+  62.500% { left:58.609%; top:-39.062%; transform:rotate(1.99deg) scale(0.7394); opacity:1; z-index:3; }
+  63.021% { left:59.240%; top:-38.988%; transform:rotate(2.65deg) scale(0.7484); opacity:1; z-index:3; }
+  63.541% { left:59.865%; top:-38.899%; transform:rotate(3.33deg) scale(0.7574); opacity:1; z-index:3; }
+  64.062% { left:60.490%; top:-38.780%; transform:rotate(4.20deg) scale(0.7665); opacity:1; z-index:3; }
+  64.584% { left:61.115%; top:-38.646%; transform:rotate(4.91deg) scale(0.7757); opacity:1; z-index:3; }
+  65.104% { left:61.740%; top:-38.467%; transform:rotate(5.64deg) scale(0.7850); opacity:1; z-index:3; }
+  65.625% { left:62.365%; top:-38.289%; transform:rotate(6.39deg) scale(0.7943); opacity:1; z-index:3; }
+  66.146% { left:62.984%; top:-38.065%; transform:rotate(7.34deg) scale(0.8037); opacity:1; z-index:3; }
+  66.666% { left:63.604%; top:-37.827%; transform:rotate(8.10deg) scale(0.8130); opacity:1; z-index:3; }
+  67.188% { left:64.224%; top:-37.560%; transform:rotate(8.85deg) scale(0.8224); opacity:1; z-index:3; }
+  67.709% { left:64.844%; top:-37.277%; transform:rotate(9.76deg) scale(0.8317); opacity:1; z-index:3; }
+  68.229% { left:65.464%; top:-36.964%; transform:rotate(10.47deg) scale(0.8409); opacity:1; z-index:3; }
+  68.750% { left:66.078%; top:-36.622%; transform:rotate(11.17deg) scale(0.8501); opacity:1; z-index:3; }
+  69.271% { left:66.693%; top:-36.265%; transform:rotate(12.03deg) scale(0.8592); opacity:1; z-index:3; }
+  69.791% { left:67.307%; top:-35.878%; transform:rotate(12.70deg) scale(0.8681); opacity:1; z-index:3; }
+  70.312% { left:67.917%; top:-35.476%; transform:rotate(13.35deg) scale(0.8770); opacity:1; z-index:3; }
+  70.834% { left:68.526%; top:-35.060%; transform:rotate(13.99deg) scale(0.8856); opacity:1; z-index:3; }
+  71.354% { left:69.130%; top:-34.613%; transform:rotate(14.77deg) scale(0.8942); opacity:1; z-index:3; }
+  71.875% { left:69.740%; top:-34.137%; transform:rotate(15.38deg) scale(0.9025); opacity:1; z-index:3; }
+  72.396% { left:70.344%; top:-33.661%; transform:rotate(15.98deg) scale(0.9106); opacity:1; z-index:3; }
+  72.916% { left:70.943%; top:-33.155%; transform:rotate(16.71deg) scale(0.9185); opacity:1; z-index:3; }
+  73.438% { left:71.542%; top:-32.634%; transform:rotate(17.32deg) scale(0.9261); opacity:1; z-index:3; }
+  73.959% { left:72.141%; top:-32.083%; transform:rotate(17.97deg) scale(0.9335); opacity:1; z-index:3; }
+  74.479% { left:72.734%; top:-31.518%; transform:rotate(18.82deg) scale(0.9406); opacity:1; z-index:3; }
+  75.000% { left:73.328%; top:-30.938%; transform:rotate(19.54deg) scale(0.9474); opacity:1; z-index:3; }
+  75.521% { left:73.917%; top:-30.327%; transform:rotate(20.30deg) scale(0.9539); opacity:1; z-index:3; }
+  76.041% { left:74.505%; top:-29.688%; transform:rotate(21.09deg) scale(0.9600); opacity:1; z-index:3; }
+  76.562% { left:75.089%; top:-29.033%; transform:rotate(22.13deg) scale(0.9658); opacity:1; z-index:3; }
+  77.084% { left:75.667%; top:-28.348%; transform:rotate(23.00deg) scale(0.9712); opacity:1; z-index:3; }
+  77.604% { left:76.240%; top:-27.634%; transform:rotate(23.91deg) scale(0.9762); opacity:1; z-index:3; }
+  78.125% { left:76.812%; top:-26.890%; transform:rotate(25.10deg) scale(0.9808); opacity:1; z-index:3; }
+  78.646% { left:77.375%; top:-26.116%; transform:rotate(26.09deg) scale(0.9849); opacity:1; z-index:3; }
+  79.166% { left:77.938%; top:-25.312%; transform:rotate(27.12deg) scale(0.9886); opacity:1; z-index:3; }
+  79.688% { left:78.495%; top:-24.479%; transform:rotate(28.19deg) scale(0.9918); opacity:1; z-index:3; }
+  80.209% { left:79.042%; top:-23.616%; transform:rotate(29.57deg) scale(0.9945); opacity:1; z-index:3; }
+  80.729% { left:79.583%; top:-22.708%; transform:rotate(30.73deg) scale(0.9967); opacity:1; z-index:3; }
+  81.250% { left:80.120%; top:-21.786%; transform:rotate(31.91deg) scale(0.9983); opacity:1; z-index:3; }
+  81.771% { left:80.646%; top:-20.818%; transform:rotate(33.45deg) scale(0.9994); opacity:1; z-index:3; }
+  82.291% { left:81.167%; top:-19.807%; transform:rotate(34.72deg) scale(1.0000); opacity:1; z-index:3; }
+  82.812% { left:81.677%; top:-18.765%; transform:rotate(36.03deg) scale(1.0000); opacity:0.989; z-index:3; }
+  83.334% { left:82.177%; top:-17.693%; transform:rotate(37.70deg) scale(1.0000); opacity:0.926; z-index:3; }
+  83.854% { left:82.672%; top:-16.592%; transform:rotate(39.08deg) scale(1.0000); opacity:0.82; z-index:3; }
+  84.375% { left:83.151%; top:-15.432%; transform:rotate(40.49deg) scale(1.0000); opacity:0.684; z-index:3; }
+  84.896% { left:83.620%; top:-14.256%; transform:rotate(41.93deg) scale(1.0000); opacity:0.531; z-index:3; }
+  85.416% { left:84.083%; top:-13.036%; transform:rotate(43.77deg) scale(1.0000); opacity:0.376; z-index:3; }
+  85.938% { left:84.531%; top:-11.786%; transform:rotate(45.27deg) scale(1.0000); opacity:0.232; z-index:3; }
+  86.459% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(1.0000); opacity:0.112; z-index:3; }
+  86.979% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(1.0000); opacity:0.03; z-index:3; }
+  87.490% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:3; }
+  87.500% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  88.021% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  88.541% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  89.062% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  89.584% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  90.104% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  90.625% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  91.146% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  91.666% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  92.188% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  92.709% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  93.229% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  93.750% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  94.271% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  94.791% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  95.312% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  95.834% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  96.354% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  96.875% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  97.396% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  97.916% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  98.438% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  98.959% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+  99.479% { left:84.792%; top:-11.012%; transform:rotate(46.03deg) scale(0.3889); opacity:0; z-index:1; }
+}
+@keyframes hdr-trail-1 {
+  0%, 100% { left:91.042%; top:17.857%; opacity:0.000; }
+  0.521% { left:91.042%; top:17.857%; opacity:0.000; }
+  1.041% { left:91.042%; top:17.857%; opacity:0.000; }
+  1.562% { left:54.302%; top:14.458%; opacity:0.000; }
+  2.084% { left:-0.625%; top:9.375%; opacity:0.000; }
+  2.604% { left:-0.625%; top:9.375%; opacity:0.000; }
+  3.125% { left:-0.625%; top:9.375%; opacity:0.000; }
+  3.646% { left:-0.625%; top:9.375%; opacity:0.000; }
+  4.166% { left:-0.625%; top:9.375%; opacity:0.000; }
+  4.688% { left:-0.625%; top:9.375%; opacity:0.000; }
+  5.209% { left:-0.625%; top:9.375%; opacity:0.000; }
+  5.729% { left:-0.625%; top:9.375%; opacity:0.000; }
+  6.250% { left:-0.625%; top:9.375%; opacity:0.000; }
+  6.771% { left:-0.569%; top:9.172%; opacity:0.000; }
+  7.291% { left:-0.343%; top:8.371%; opacity:0.000; }
+  7.812% { left:0.020%; top:7.124%; opacity:0.000; }
+  8.334% { left:0.403%; top:5.895%; opacity:0.011; }
+  8.854% { left:0.802%; top:4.678%; opacity:0.060; }
+  9.375% { left:1.220%; top:3.466%; opacity:0.152; }
+  9.896% { left:1.657%; top:2.288%; opacity:0.275; }
+  10.416% { left:2.107%; top:1.136%; opacity:0.416; }
+  10.938% { left:2.577%; top:-0.007%; opacity:0.563; }
+  11.459% { left:3.061%; top:-1.120%; opacity:0.702; }
+  11.979% { left:3.558%; top:-2.198%; opacity:0.819; }
+  12.500% { left:4.075%; top:-3.254%; opacity:0.904; }
+  13.021% { left:4.608%; top:-4.275%; opacity:0.944; }
+  13.541% { left:5.152%; top:-5.266%; opacity:0.950; }
+  14.062% { left:5.712%; top:-6.224%; opacity:0.950; }
+  14.584% { left:6.284%; top:-7.144%; opacity:0.950; }
+  15.104% { left:6.865%; top:-8.022%; opacity:0.950; }
+  15.625% { left:7.461%; top:-8.876%; opacity:0.950; }
+  16.146% { left:8.067%; top:-9.697%; opacity:0.950; }
+  16.666% { left:8.681%; top:-10.481%; opacity:0.950; }
+  17.188% { left:9.310%; top:-11.230%; opacity:0.950; }
+  17.709% { left:9.944%; top:-11.834%; opacity:0.950; }
+  18.229% { left:10.585%; top:-12.054%; opacity:0.950; }
+  18.750% { left:11.237%; top:-11.818%; opacity:0.950; }
+  19.271% { left:11.895%; top:-11.223%; opacity:0.950; }
+  19.791% { left:12.557%; top:-10.385%; opacity:0.950; }
+  20.312% { left:13.228%; top:-9.410%; opacity:0.950; }
+  20.834% { left:13.902%; top:-8.401%; opacity:0.950; }
+  21.354% { left:14.579%; top:-7.475%; opacity:0.950; }
+  21.875% { left:15.263%; top:-6.726%; opacity:0.950; }
+  22.396% { left:15.950%; top:-6.268%; opacity:0.950; }
+  22.916% { left:16.638%; top:-6.199%; opacity:0.950; }
+  23.438% { left:17.332%; top:-6.462%; opacity:0.950; }
+  23.959% { left:18.028%; top:-6.798%; opacity:0.950; }
+  24.479% { left:18.721%; top:-7.107%; opacity:0.950; }
+  25.000% { left:19.420%; top:-7.384%; opacity:0.950; }
+  25.521% { left:20.118%; top:-7.646%; opacity:0.950; }
+  26.041% { left:20.817%; top:-7.881%; opacity:0.950; }
+  26.562% { left:21.519%; top:-8.083%; opacity:0.950; }
+  27.084% { left:22.217%; top:-8.271%; opacity:0.950; }
+  27.604% { left:22.913%; top:-8.437%; opacity:0.950; }
+  28.125% { left:23.613%; top:-8.575%; opacity:0.950; }
+  28.646% { left:24.309%; top:-8.688%; opacity:0.950; }
+  29.166% { left:25.000%; top:-8.786%; opacity:0.950; }
+  29.688% { left:25.694%; top:-8.869%; opacity:0.950; }
+  30.209% { left:26.385%; top:-8.938%; opacity:0.950; }
+  30.729% { left:27.071%; top:-8.985%; opacity:0.950; }
+  31.250% { left:27.758%; top:-9.009%; opacity:0.950; }
+  31.771% { left:28.438%; top:-9.012%; opacity:0.950; }
+  32.291% { left:29.111%; top:-8.997%; opacity:0.950; }
+  32.812% { left:29.785%; top:-8.970%; opacity:0.950; }
+  33.334% { left:30.455%; top:-8.920%; opacity:0.950; }
+  33.854% { left:31.116%; top:-8.854%; opacity:0.950; }
+  34.375% { left:31.773%; top:-8.774%; opacity:0.950; }
+  34.896% { left:32.428%; top:-8.678%; opacity:0.950; }
+  35.416% { left:33.075%; top:-8.569%; opacity:0.950; }
+  35.938% { left:33.718%; top:-8.437%; opacity:0.950; }
+  36.459% { left:34.354%; top:-8.289%; opacity:0.950; }
+  36.979% { left:34.983%; top:-8.128%; opacity:0.950; }
+  37.500% { left:35.606%; top:-7.949%; opacity:0.950; }
+  38.021% { left:36.218%; top:-7.759%; opacity:0.950; }
+  38.541% { left:36.824%; top:-7.551%; opacity:0.950; }
+  39.062% { left:37.425%; top:-7.336%; opacity:0.950; }
+  39.584% { left:38.017%; top:-7.107%; opacity:0.950; }
+  40.104% { left:38.600%; top:-6.864%; opacity:0.950; }
+  40.625% { left:39.178%; top:-6.604%; opacity:0.950; }
+  41.146% { left:39.744%; top:-6.336%; opacity:0.950; }
+  41.666% { left:40.294%; top:-6.312%; opacity:0.950; }
+  42.188% { left:40.814%; top:-7.562%; opacity:0.950; }
+  42.709% { left:41.300%; top:-10.058%; opacity:0.950; }
+  43.229% { left:41.789%; top:-12.271%; opacity:0.950; }
+  43.750% { left:42.280%; top:-14.195%; opacity:0.950; }
+  44.271% { left:42.767%; top:-15.823%; opacity:0.950; }
+  44.791% { left:43.252%; top:-17.159%; opacity:0.950; }
+  45.312% { left:43.743%; top:-18.209%; opacity:0.950; }
+  45.834% { left:44.233%; top:-18.968%; opacity:0.950; }
+  46.354% { left:44.719%; top:-19.434%; opacity:0.950; }
+  46.875% { left:45.207%; top:-19.613%; opacity:0.950; }
+  47.396% { left:45.696%; top:-19.494%; opacity:0.950; }
+  47.916% { left:46.185%; top:-19.084%; opacity:0.950; }
+  48.438% { left:46.675%; top:-18.389%; opacity:0.950; }
+  48.959% { left:47.163%; top:-17.407%; opacity:0.950; }
+  49.479% { left:47.648%; top:-16.130%; opacity:0.950; }
+  50.000% { left:48.139%; top:-14.555%; opacity:0.950; }
+  50.521% { left:48.626%; top:-12.701%; opacity:0.950; }
+  51.041% { left:49.112%; top:-10.563%; opacity:0.950; }
+  51.562% { left:49.602%; top:-8.117%; opacity:0.950; }
+  52.084% { left:50.144%; top:-6.673%; opacity:0.950; }
+  52.604% { left:50.760%; top:-6.979%; opacity:0.950; }
+  53.125% { left:51.379%; top:-7.277%; opacity:0.950; }
+  53.646% { left:51.998%; top:-7.563%; opacity:0.950; }
+  54.166% { left:52.617%; top:-7.830%; opacity:0.950; }
+  54.688% { left:53.238%; top:-8.092%; opacity:0.950; }
+  55.209% { left:53.858%; top:-8.345%; opacity:0.950; }
+  55.729% { left:54.478%; top:-8.586%; opacity:0.950; }
+  56.250% { left:55.103%; top:-8.804%; opacity:0.950; }
+  56.771% { left:55.724%; top:-9.012%; opacity:0.950; }
+  57.291% { left:56.348%; top:-9.208%; opacity:0.950; }
+  57.812% { left:56.974%; top:-9.387%; opacity:0.950; }
+  58.334% { left:57.597%; top:-9.554%; opacity:0.950; }
+  58.854% { left:58.218%; top:-9.702%; opacity:0.950; }
+  59.375% { left:58.846%; top:-9.839%; opacity:0.950; }
+  59.896% { left:59.474%; top:-9.952%; opacity:0.950; }
+  60.416% { left:60.098%; top:-10.050%; opacity:0.950; }
+  60.938% { left:60.724%; top:-10.134%; opacity:0.950; }
+  61.459% { left:61.352%; top:-10.202%; opacity:0.950; }
+  61.979% { left:61.978%; top:-10.250%; opacity:0.950; }
+  62.500% { left:62.605%; top:-10.274%; opacity:0.950; }
+  63.021% { left:63.232%; top:-10.277%; opacity:0.950; }
+  63.541% { left:63.858%; top:-10.256%; opacity:0.950; }
+  64.062% { left:64.485%; top:-10.220%; opacity:0.950; }
+  64.584% { left:65.112%; top:-10.164%; opacity:0.950; }
+  65.104% { left:65.739%; top:-10.083%; opacity:0.950; }
+  65.625% { left:66.365%; top:-9.982%; opacity:0.950; }
+  66.146% { left:66.990%; top:-9.857%; opacity:0.950; }
+  66.666% { left:67.614%; top:-9.706%; opacity:0.950; }
+  67.188% { left:68.240%; top:-9.527%; opacity:0.950; }
+  67.709% { left:68.863%; top:-9.330%; opacity:0.950; }
+  68.229% { left:69.481%; top:-9.102%; opacity:0.950; }
+  68.750% { left:70.103%; top:-8.851%; opacity:0.950; }
+  69.271% { left:70.722%; top:-8.577%; opacity:0.950; }
+  69.791% { left:71.341%; top:-8.283%; opacity:0.950; }
+  70.312% { left:71.960%; top:-7.958%; opacity:0.950; }
+  70.834% { left:72.574%; top:-7.610%; opacity:0.950; }
+  71.354% { left:73.188%; top:-7.242%; opacity:0.950; }
+  71.875% { left:73.802%; top:-6.848%; opacity:0.950; }
+  72.396% { left:74.411%; top:-6.440%; opacity:0.950; }
+  72.916% { left:75.017%; top:-6.013%; opacity:0.950; }
+  73.438% { left:75.624%; top:-5.553%; opacity:0.950; }
+  73.959% { left:76.232%; top:-5.077%; opacity:0.950; }
+  74.479% { left:76.832%; top:-4.590%; opacity:0.950; }
+  75.000% { left:77.433%; top:-4.077%; opacity:0.950; }
+  75.521% { left:78.032%; top:-3.544%; opacity:0.950; }
+  76.041% { left:78.627%; top:-2.989%; opacity:0.950; }
+  76.562% { left:79.222%; top:-2.416%; opacity:0.950; }
+  77.084% { left:79.814%; top:-1.824%; opacity:0.950; }
+  77.604% { left:80.401%; top:-1.203%; opacity:0.950; }
+  78.125% { left:80.989%; top:-0.556%; opacity:0.950; }
+  78.646% { left:81.570%; top:0.111%; opacity:0.950; }
+  79.166% { left:82.145%; top:0.805%; opacity:0.950; }
+  79.688% { left:82.719%; top:1.533%; opacity:0.950; }
+  80.209% { left:83.288%; top:2.289%; opacity:0.950; }
+  80.729% { left:83.849%; top:3.073%; opacity:0.950; }
+  81.250% { left:84.411%; top:3.891%; opacity:0.950; }
+  81.771% { left:84.964%; top:4.736%; opacity:0.950; }
+  82.291% { left:85.507%; top:5.615%; opacity:0.950; }
+  82.812% { left:86.048%; top:6.530%; opacity:0.950; }
+  83.334% { left:86.581%; top:7.471%; opacity:0.950; }
+  83.854% { left:87.103%; top:8.454%; opacity:0.950; }
+  84.375% { left:87.621%; top:9.480%; opacity:0.946; }
+  84.896% { left:88.127%; top:10.534%; opacity:0.916; }
+  85.416% { left:88.624%; top:11.614%; opacity:0.840; }
+  85.938% { left:89.114%; top:12.742%; opacity:0.727; }
+  86.459% { left:89.589%; top:13.909%; opacity:0.592; }
+  86.979% { left:90.054%; top:15.099%; opacity:0.446; }
+  87.500% { left:90.513%; top:16.334%; opacity:0.302; }
+  88.021% { left:90.886%; top:17.393%; opacity:0.175; }
+  88.541% { left:91.042%; top:17.857%; opacity:0.075; }
+  89.062% { left:91.042%; top:17.857%; opacity:0.017; }
+  89.584% { left:91.042%; top:17.857%; opacity:0.000; }
+  90.104% { left:91.042%; top:17.857%; opacity:0.000; }
+  90.625% { left:91.042%; top:17.857%; opacity:0.000; }
+  91.146% { left:91.042%; top:17.857%; opacity:0.000; }
+  91.666% { left:91.042%; top:17.857%; opacity:0.000; }
+  92.188% { left:91.042%; top:17.857%; opacity:0.000; }
+  92.709% { left:91.042%; top:17.857%; opacity:0.000; }
+  93.229% { left:91.042%; top:17.857%; opacity:0.000; }
+  93.750% { left:91.042%; top:17.857%; opacity:0.000; }
+  94.271% { left:91.042%; top:17.857%; opacity:0.000; }
+  94.791% { left:91.042%; top:17.857%; opacity:0.000; }
+  95.312% { left:91.042%; top:17.857%; opacity:0.000; }
+  95.834% { left:91.042%; top:17.857%; opacity:0.000; }
+  96.354% { left:91.042%; top:17.857%; opacity:0.000; }
+  96.875% { left:91.042%; top:17.857%; opacity:0.000; }
+  97.396% { left:91.042%; top:17.857%; opacity:0.000; }
+  97.916% { left:91.042%; top:17.857%; opacity:0.000; }
+  98.438% { left:91.042%; top:17.857%; opacity:0.000; }
+  98.959% { left:91.042%; top:17.857%; opacity:0.000; }
+  99.479% { left:91.042%; top:17.857%; opacity:0.000; }
+}
+@keyframes hdr-trail-2 {
+  0%, 100% { left:91.042%; top:17.857%; opacity:0.000; }
+  0.521% { left:91.042%; top:17.857%; opacity:0.000; }
+  1.041% { left:91.042%; top:17.857%; opacity:0.000; }
+  1.562% { left:91.042%; top:17.857%; opacity:0.000; }
+  2.084% { left:91.042%; top:17.857%; opacity:0.000; }
+  2.604% { left:91.042%; top:17.857%; opacity:0.000; }
+  3.125% { left:91.042%; top:17.857%; opacity:0.000; }
+  3.646% { left:91.042%; top:17.857%; opacity:0.000; }
+  4.166% { left:91.042%; top:17.857%; opacity:0.000; }
+  4.688% { left:54.302%; top:14.458%; opacity:0.000; }
+  5.209% { left:-0.625%; top:9.375%; opacity:0.000; }
+  5.729% { left:-0.625%; top:9.375%; opacity:0.000; }
+  6.250% { left:-0.625%; top:9.375%; opacity:0.000; }
+  6.771% { left:-0.625%; top:9.375%; opacity:0.000; }
+  7.291% { left:-0.625%; top:9.375%; opacity:0.000; }
+  7.812% { left:-0.625%; top:9.375%; opacity:0.000; }
+  8.334% { left:-0.625%; top:9.375%; opacity:0.000; }
+  8.854% { left:-0.625%; top:9.375%; opacity:0.000; }
+  9.375% { left:-0.625%; top:9.375%; opacity:0.000; }
+  9.896% { left:-0.569%; top:9.172%; opacity:0.000; }
+  10.416% { left:-0.343%; top:8.371%; opacity:0.000; }
+  10.938% { left:0.020%; top:7.124%; opacity:0.000; }
+  11.459% { left:0.403%; top:5.895%; opacity:0.008; }
+  11.979% { left:0.802%; top:4.678%; opacity:0.041; }
+  12.500% { left:1.220%; top:3.466%; opacity:0.104; }
+  13.021% { left:1.657%; top:2.288%; opacity:0.188; }
+  13.541% { left:2.107%; top:1.136%; opacity:0.285; }
+  14.062% { left:2.577%; top:-0.007%; opacity:0.385; }
+  14.584% { left:3.061%; top:-1.120%; opacity:0.480; }
+  15.104% { left:3.558%; top:-2.198%; opacity:0.560; }
+  15.625% { left:4.075%; top:-3.254%; opacity:0.618; }
+  16.146% { left:4.608%; top:-4.275%; opacity:0.646; }
+  16.666% { left:5.152%; top:-5.266%; opacity:0.650; }
+  17.188% { left:5.712%; top:-6.224%; opacity:0.650; }
+  17.709% { left:6.284%; top:-7.144%; opacity:0.650; }
+  18.229% { left:6.865%; top:-8.022%; opacity:0.650; }
+  18.750% { left:7.461%; top:-8.876%; opacity:0.650; }
+  19.271% { left:8.067%; top:-9.697%; opacity:0.650; }
+  19.791% { left:8.681%; top:-10.481%; opacity:0.650; }
+  20.312% { left:9.310%; top:-11.230%; opacity:0.650; }
+  20.834% { left:9.944%; top:-11.834%; opacity:0.650; }
+  21.354% { left:10.585%; top:-12.054%; opacity:0.650; }
+  21.875% { left:11.237%; top:-11.818%; opacity:0.650; }
+  22.396% { left:11.895%; top:-11.223%; opacity:0.650; }
+  22.916% { left:12.557%; top:-10.385%; opacity:0.650; }
+  23.438% { left:13.228%; top:-9.410%; opacity:0.650; }
+  23.959% { left:13.902%; top:-8.401%; opacity:0.650; }
+  24.479% { left:14.579%; top:-7.475%; opacity:0.650; }
+  25.000% { left:15.263%; top:-6.726%; opacity:0.650; }
+  25.521% { left:15.950%; top:-6.268%; opacity:0.650; }
+  26.041% { left:16.638%; top:-6.199%; opacity:0.650; }
+  26.562% { left:17.332%; top:-6.462%; opacity:0.650; }
+  27.084% { left:18.028%; top:-6.798%; opacity:0.650; }
+  27.604% { left:18.721%; top:-7.107%; opacity:0.650; }
+  28.125% { left:19.420%; top:-7.384%; opacity:0.650; }
+  28.646% { left:20.118%; top:-7.646%; opacity:0.650; }
+  29.166% { left:20.817%; top:-7.881%; opacity:0.650; }
+  29.688% { left:21.519%; top:-8.083%; opacity:0.650; }
+  30.209% { left:22.217%; top:-8.271%; opacity:0.650; }
+  30.729% { left:22.913%; top:-8.437%; opacity:0.650; }
+  31.250% { left:23.613%; top:-8.575%; opacity:0.650; }
+  31.771% { left:24.309%; top:-8.688%; opacity:0.650; }
+  32.291% { left:25.000%; top:-8.786%; opacity:0.650; }
+  32.812% { left:25.694%; top:-8.869%; opacity:0.650; }
+  33.334% { left:26.385%; top:-8.938%; opacity:0.650; }
+  33.854% { left:27.071%; top:-8.985%; opacity:0.650; }
+  34.375% { left:27.758%; top:-9.009%; opacity:0.650; }
+  34.896% { left:28.438%; top:-9.012%; opacity:0.650; }
+  35.416% { left:29.111%; top:-8.997%; opacity:0.650; }
+  35.938% { left:29.785%; top:-8.970%; opacity:0.650; }
+  36.459% { left:30.455%; top:-8.920%; opacity:0.650; }
+  36.979% { left:31.116%; top:-8.854%; opacity:0.650; }
+  37.500% { left:31.773%; top:-8.774%; opacity:0.650; }
+  38.021% { left:32.428%; top:-8.678%; opacity:0.650; }
+  38.541% { left:33.075%; top:-8.569%; opacity:0.650; }
+  39.062% { left:33.718%; top:-8.437%; opacity:0.650; }
+  39.584% { left:34.354%; top:-8.289%; opacity:0.650; }
+  40.104% { left:34.983%; top:-8.128%; opacity:0.650; }
+  40.625% { left:35.606%; top:-7.949%; opacity:0.650; }
+  41.146% { left:36.218%; top:-7.759%; opacity:0.650; }
+  41.666% { left:36.824%; top:-7.551%; opacity:0.650; }
+  42.188% { left:37.425%; top:-7.336%; opacity:0.650; }
+  42.709% { left:38.017%; top:-7.107%; opacity:0.650; }
+  43.229% { left:38.600%; top:-6.864%; opacity:0.650; }
+  43.750% { left:39.178%; top:-6.604%; opacity:0.650; }
+  44.271% { left:39.744%; top:-6.336%; opacity:0.650; }
+  44.791% { left:40.294%; top:-6.312%; opacity:0.650; }
+  45.312% { left:40.814%; top:-7.562%; opacity:0.650; }
+  45.834% { left:41.300%; top:-10.058%; opacity:0.650; }
+  46.354% { left:41.789%; top:-12.271%; opacity:0.650; }
+  46.875% { left:42.280%; top:-14.195%; opacity:0.650; }
+  47.396% { left:42.767%; top:-15.823%; opacity:0.650; }
+  47.916% { left:43.252%; top:-17.159%; opacity:0.650; }
+  48.438% { left:43.743%; top:-18.209%; opacity:0.650; }
+  48.959% { left:44.233%; top:-18.968%; opacity:0.650; }
+  49.479% { left:44.719%; top:-19.434%; opacity:0.650; }
+  50.000% { left:45.207%; top:-19.613%; opacity:0.650; }
+  50.521% { left:45.696%; top:-19.494%; opacity:0.650; }
+  51.041% { left:46.185%; top:-19.084%; opacity:0.650; }
+  51.562% { left:46.675%; top:-18.389%; opacity:0.650; }
+  52.084% { left:47.163%; top:-17.407%; opacity:0.650; }
+  52.604% { left:47.648%; top:-16.130%; opacity:0.650; }
+  53.125% { left:48.139%; top:-14.555%; opacity:0.650; }
+  53.646% { left:48.626%; top:-12.701%; opacity:0.650; }
+  54.166% { left:49.112%; top:-10.563%; opacity:0.650; }
+  54.688% { left:49.602%; top:-8.117%; opacity:0.650; }
+  55.209% { left:50.144%; top:-6.673%; opacity:0.650; }
+  55.729% { left:50.760%; top:-6.979%; opacity:0.650; }
+  56.250% { left:51.379%; top:-7.277%; opacity:0.650; }
+  56.771% { left:51.998%; top:-7.563%; opacity:0.650; }
+  57.291% { left:52.617%; top:-7.830%; opacity:0.650; }
+  57.812% { left:53.238%; top:-8.092%; opacity:0.650; }
+  58.334% { left:53.858%; top:-8.345%; opacity:0.650; }
+  58.854% { left:54.478%; top:-8.586%; opacity:0.650; }
+  59.375% { left:55.103%; top:-8.804%; opacity:0.650; }
+  59.896% { left:55.724%; top:-9.012%; opacity:0.650; }
+  60.416% { left:56.348%; top:-9.208%; opacity:0.650; }
+  60.938% { left:56.974%; top:-9.387%; opacity:0.650; }
+  61.459% { left:57.597%; top:-9.554%; opacity:0.650; }
+  61.979% { left:58.218%; top:-9.702%; opacity:0.650; }
+  62.500% { left:58.846%; top:-9.839%; opacity:0.650; }
+  63.021% { left:59.474%; top:-9.952%; opacity:0.650; }
+  63.541% { left:60.098%; top:-10.050%; opacity:0.650; }
+  64.062% { left:60.724%; top:-10.134%; opacity:0.650; }
+  64.584% { left:61.352%; top:-10.202%; opacity:0.650; }
+  65.104% { left:61.978%; top:-10.250%; opacity:0.650; }
+  65.625% { left:62.605%; top:-10.274%; opacity:0.650; }
+  66.146% { left:63.232%; top:-10.277%; opacity:0.650; }
+  66.666% { left:63.858%; top:-10.256%; opacity:0.650; }
+  67.188% { left:64.485%; top:-10.220%; opacity:0.650; }
+  67.709% { left:65.112%; top:-10.164%; opacity:0.650; }
+  68.229% { left:65.739%; top:-10.083%; opacity:0.650; }
+  68.750% { left:66.365%; top:-9.982%; opacity:0.650; }
+  69.271% { left:66.990%; top:-9.857%; opacity:0.650; }
+  69.791% { left:67.614%; top:-9.706%; opacity:0.650; }
+  70.312% { left:68.240%; top:-9.527%; opacity:0.650; }
+  70.834% { left:68.863%; top:-9.330%; opacity:0.650; }
+  71.354% { left:69.481%; top:-9.102%; opacity:0.650; }
+  71.875% { left:70.103%; top:-8.851%; opacity:0.650; }
+  72.396% { left:70.722%; top:-8.577%; opacity:0.650; }
+  72.916% { left:71.341%; top:-8.283%; opacity:0.650; }
+  73.438% { left:71.960%; top:-7.958%; opacity:0.650; }
+  73.959% { left:72.574%; top:-7.610%; opacity:0.650; }
+  74.479% { left:73.188%; top:-7.242%; opacity:0.650; }
+  75.000% { left:73.802%; top:-6.848%; opacity:0.650; }
+  75.521% { left:74.411%; top:-6.440%; opacity:0.650; }
+  76.041% { left:75.017%; top:-6.013%; opacity:0.650; }
+  76.562% { left:75.624%; top:-5.553%; opacity:0.650; }
+  77.084% { left:76.232%; top:-5.077%; opacity:0.650; }
+  77.604% { left:76.832%; top:-4.590%; opacity:0.650; }
+  78.125% { left:77.433%; top:-4.077%; opacity:0.650; }
+  78.646% { left:78.032%; top:-3.544%; opacity:0.650; }
+  79.166% { left:78.627%; top:-2.989%; opacity:0.650; }
+  79.688% { left:79.222%; top:-2.416%; opacity:0.650; }
+  80.209% { left:79.814%; top:-1.824%; opacity:0.650; }
+  80.729% { left:80.401%; top:-1.203%; opacity:0.650; }
+  81.250% { left:80.989%; top:-0.556%; opacity:0.650; }
+  81.771% { left:81.570%; top:0.111%; opacity:0.650; }
+  82.291% { left:82.145%; top:0.805%; opacity:0.650; }
+  82.812% { left:82.719%; top:1.533%; opacity:0.650; }
+  83.334% { left:83.288%; top:2.289%; opacity:0.650; }
+  83.854% { left:83.849%; top:3.073%; opacity:0.650; }
+  84.375% { left:84.411%; top:3.891%; opacity:0.650; }
+  84.896% { left:84.964%; top:4.736%; opacity:0.650; }
+  85.416% { left:85.507%; top:5.615%; opacity:0.650; }
+  85.938% { left:86.048%; top:6.530%; opacity:0.650; }
+  86.459% { left:86.581%; top:7.471%; opacity:0.650; }
+  86.979% { left:87.103%; top:8.454%; opacity:0.650; }
+  87.500% { left:87.621%; top:9.480%; opacity:0.647; }
+  88.021% { left:88.127%; top:10.534%; opacity:0.626; }
+  88.541% { left:88.624%; top:11.614%; opacity:0.574; }
+  89.062% { left:89.114%; top:12.742%; opacity:0.498; }
+  89.584% { left:89.589%; top:13.909%; opacity:0.405; }
+  90.104% { left:90.054%; top:15.099%; opacity:0.305; }
+  90.625% { left:90.513%; top:16.334%; opacity:0.207; }
+  91.146% { left:90.886%; top:17.393%; opacity:0.120; }
+  91.666% { left:91.042%; top:17.857%; opacity:0.052; }
+  92.188% { left:91.042%; top:17.857%; opacity:0.012; }
+  92.709% { left:91.042%; top:17.857%; opacity:0.000; }
+  93.229% { left:91.042%; top:17.857%; opacity:0.000; }
+  93.750% { left:91.042%; top:17.857%; opacity:0.000; }
+  94.271% { left:91.042%; top:17.857%; opacity:0.000; }
+  94.791% { left:91.042%; top:17.857%; opacity:0.000; }
+  95.312% { left:91.042%; top:17.857%; opacity:0.000; }
+  95.834% { left:91.042%; top:17.857%; opacity:0.000; }
+  96.354% { left:91.042%; top:17.857%; opacity:0.000; }
+  96.875% { left:91.042%; top:17.857%; opacity:0.000; }
+  97.396% { left:91.042%; top:17.857%; opacity:0.000; }
+  97.916% { left:91.042%; top:17.857%; opacity:0.000; }
+  98.438% { left:91.042%; top:17.857%; opacity:0.000; }
+  98.959% { left:91.042%; top:17.857%; opacity:0.000; }
+  99.479% { left:91.042%; top:17.857%; opacity:0.000; }
+}
+@keyframes hdr-trail-3 {
+  0%, 100% { left:91.042%; top:17.857%; opacity:0.000; }
+  0.521% { left:91.042%; top:17.857%; opacity:0.000; }
+  1.041% { left:91.042%; top:17.857%; opacity:0.000; }
+  1.562% { left:91.042%; top:17.857%; opacity:0.000; }
+  2.084% { left:91.042%; top:17.857%; opacity:0.000; }
+  2.604% { left:91.042%; top:17.857%; opacity:0.000; }
+  3.125% { left:91.042%; top:17.857%; opacity:0.000; }
+  3.646% { left:91.042%; top:17.857%; opacity:0.000; }
+  4.166% { left:91.042%; top:17.857%; opacity:0.000; }
+  4.688% { left:91.042%; top:17.857%; opacity:0.000; }
+  5.209% { left:91.042%; top:17.857%; opacity:0.000; }
+  5.729% { left:91.042%; top:17.857%; opacity:0.000; }
+  6.250% { left:91.042%; top:17.857%; opacity:0.000; }
+  6.771% { left:91.042%; top:17.857%; opacity:0.000; }
+  7.291% { left:91.042%; top:17.857%; opacity:0.000; }
+  7.812% { left:91.042%; top:17.857%; opacity:0.000; }
+  8.334% { left:72.562%; top:16.147%; opacity:0.000; }
+  8.854% { left:-0.625%; top:9.375%; opacity:0.000; }
+  9.375% { left:-0.625%; top:9.375%; opacity:0.000; }
+  9.896% { left:-0.625%; top:9.375%; opacity:0.000; }
+  10.416% { left:-0.625%; top:9.375%; opacity:0.000; }
+  10.938% { left:-0.625%; top:9.375%; opacity:0.000; }
+  11.459% { left:-0.625%; top:9.375%; opacity:0.000; }
+  11.979% { left:-0.625%; top:9.375%; opacity:0.000; }
+  12.500% { left:-0.625%; top:9.375%; opacity:0.000; }
+  13.021% { left:-0.625%; top:9.375%; opacity:0.000; }
+  13.541% { left:-0.597%; top:9.274%; opacity:0.000; }
+  14.062% { left:-0.414%; top:8.620%; opacity:0.000; }
+  14.584% { left:-0.055%; top:7.370%; opacity:0.000; }
+  15.104% { left:0.324%; top:6.141%; opacity:0.002; }
+  15.625% { left:0.722%; top:4.921%; opacity:0.016; }
+  16.146% { left:1.134%; top:3.703%; opacity:0.048; }
+  16.666% { left:1.567%; top:2.522%; opacity:0.091; }
+  17.188% { left:2.014%; top:1.364%; opacity:0.142; }
+  17.709% { left:2.482%; top:0.218%; opacity:0.197; }
+  18.229% { left:2.962%; top:-0.901%; opacity:0.249; }
+  18.750% { left:3.456%; top:-1.984%; opacity:0.294; }
+  19.271% { left:3.971%; top:-3.049%; opacity:0.329; }
+  19.791% { left:4.499%; top:-4.071%; opacity:0.347; }
+  20.312% { left:5.042%; top:-5.074%; opacity:0.350; }
+  20.834% { left:5.599%; top:-6.037%; opacity:0.350; }
+  21.354% { left:6.167%; top:-6.964%; opacity:0.350; }
+  21.875% { left:6.747%; top:-7.850%; opacity:0.350; }
+  22.396% { left:7.341%; top:-8.710%; opacity:0.350; }
+  22.916% { left:7.944%; top:-9.535%; opacity:0.350; }
+  23.438% { left:8.557%; top:-10.330%; opacity:0.350; }
+  23.959% { left:9.184%; top:-11.085%; opacity:0.350; }
+  24.479% { left:9.815%; top:-11.750%; opacity:0.350; }
+  25.000% { left:10.457%; top:-12.069%; opacity:0.350; }
+  25.521% { left:11.106%; top:-11.913%; opacity:0.350; }
+  26.041% { left:11.762%; top:-11.379%; opacity:0.350; }
+  26.562% { left:12.424%; top:-10.572%; opacity:0.350; }
+  27.084% { left:13.094%; top:-9.614%; opacity:0.350; }
+  27.604% { left:13.765%; top:-8.599%; opacity:0.350; }
+  28.125% { left:14.443%; top:-7.644%; opacity:0.350; }
+  28.646% { left:15.127%; top:-6.844%; opacity:0.350; }
+  29.166% { left:15.810%; top:-6.319%; opacity:0.350; }
+  29.688% { left:16.502%; top:-6.158%; opacity:0.350; }
+  30.209% { left:17.193%; top:-6.393%; opacity:0.350; }
+  30.729% { left:17.888%; top:-6.732%; opacity:0.350; }
+  31.250% { left:18.582%; top:-7.050%; opacity:0.350; }
+  31.771% { left:19.281%; top:-7.331%; opacity:0.350; }
+  32.291% { left:19.978%; top:-7.595%; opacity:0.350; }
+  32.812% { left:20.677%; top:-7.839%; opacity:0.350; }
+  33.334% { left:21.380%; top:-8.045%; opacity:0.350; }
+  33.854% { left:22.077%; top:-8.235%; opacity:0.350; }
+  34.375% { left:22.774%; top:-8.408%; opacity:0.350; }
+  34.896% { left:23.474%; top:-8.551%; opacity:0.350; }
+  35.416% { left:24.169%; top:-8.667%; opacity:0.350; }
+  35.938% { left:24.862%; top:-8.768%; opacity:0.350; }
+  36.459% { left:25.556%; top:-8.854%; opacity:0.350; }
+  36.979% { left:26.246%; top:-8.926%; opacity:0.350; }
+  37.500% { left:26.934%; top:-8.979%; opacity:0.350; }
+  38.021% { left:27.622%; top:-9.006%; opacity:0.350; }
+  38.541% { left:28.302%; top:-9.015%; opacity:0.350; }
+  39.062% { left:28.978%; top:-9.000%; opacity:0.350; }
+  39.584% { left:29.651%; top:-8.979%; opacity:0.350; }
+  40.104% { left:30.320%; top:-8.932%; opacity:0.350; }
+  40.625% { left:30.985%; top:-8.869%; opacity:0.350; }
+  41.146% { left:31.643%; top:-8.792%; opacity:0.350; }
+  41.666% { left:32.296%; top:-8.699%; opacity:0.350; }
+  42.188% { left:32.946%; top:-8.592%; opacity:0.350; }
+  42.709% { left:33.592%; top:-8.467%; opacity:0.350; }
+  43.229% { left:34.226%; top:-8.319%; opacity:0.350; }
+  43.750% { left:34.859%; top:-8.164%; opacity:0.350; }
+  44.271% { left:35.483%; top:-7.985%; opacity:0.350; }
+  44.791% { left:36.095%; top:-7.801%; opacity:0.350; }
+  45.312% { left:36.704%; top:-7.592%; opacity:0.350; }
+  45.834% { left:37.307%; top:-7.381%; opacity:0.350; }
+  46.354% { left:37.898%; top:-7.155%; opacity:0.350; }
+  46.875% { left:38.485%; top:-6.914%; opacity:0.350; }
+  47.396% { left:39.063%; top:-6.657%; opacity:0.350; }
+  47.916% { left:39.632%; top:-6.390%; opacity:0.350; }
+  48.438% { left:40.186%; top:-6.244%; opacity:0.350; }
+  48.959% { left:40.717%; top:-7.043%; opacity:0.350; }
+  49.479% { left:41.202%; top:-9.587%; opacity:0.350; }
+  50.000% { left:41.691%; top:-11.864%; opacity:0.350; }
+  50.521% { left:42.182%; top:-13.848%; opacity:0.350; }
+  51.041% { left:42.669%; top:-15.529%; opacity:0.350; }
+  51.562% { left:43.155%; top:-16.928%; opacity:0.350; }
+  52.084% { left:43.646%; top:-18.034%; opacity:0.350; }
+  52.604% { left:44.134%; top:-18.851%; opacity:0.350; }
+  53.125% { left:44.623%; top:-19.375%; opacity:0.350; }
+  53.646% { left:45.109%; top:-19.613%; opacity:0.350; }
+  54.166% { left:45.598%; top:-19.554%; opacity:0.350; }
+  54.688% { left:46.087%; top:-19.200%; opacity:0.350; }
+  55.209% { left:46.578%; top:-18.561%; opacity:0.350; }
+  55.729% { left:47.065%; top:-17.641%; opacity:0.350; }
+  56.250% { left:47.551%; top:-16.421%; opacity:0.350; }
+  56.771% { left:48.041%; top:-14.902%; opacity:0.350; }
+  57.291% { left:48.529%; top:-13.109%; opacity:0.350; }
+  57.812% { left:49.014%; top:-11.026%; opacity:0.350; }
+  58.334% { left:49.505%; top:-8.639%; opacity:0.350; }
+  58.854% { left:50.019%; top:-6.610%; opacity:0.350; }
+  59.375% { left:50.638%; top:-6.919%; opacity:0.350; }
+  59.896% { left:51.255%; top:-7.218%; opacity:0.350; }
+  60.416% { left:51.873%; top:-7.509%; opacity:0.350; }
+  60.938% { left:52.493%; top:-7.777%; opacity:0.350; }
+  61.459% { left:53.115%; top:-8.042%; opacity:0.350; }
+  61.979% { left:53.733%; top:-8.294%; opacity:0.350; }
+  62.500% { left:54.354%; top:-8.541%; opacity:0.350; }
+  63.021% { left:54.979%; top:-8.762%; opacity:0.350; }
+  63.541% { left:55.598%; top:-8.970%; opacity:0.350; }
+  64.062% { left:56.223%; top:-9.172%; opacity:0.350; }
+  64.584% { left:56.850%; top:-9.351%; opacity:0.350; }
+  65.104% { left:57.472%; top:-9.524%; opacity:0.350; }
+  65.625% { left:58.093%; top:-9.673%; opacity:0.350; }
+  66.146% { left:58.721%; top:-9.816%; opacity:0.350; }
+  66.666% { left:59.348%; top:-9.931%; opacity:0.350; }
+  67.188% { left:59.973%; top:-10.033%; opacity:0.350; }
+  67.709% { left:60.600%; top:-10.119%; opacity:0.350; }
+  68.229% { left:61.224%; top:-10.190%; opacity:0.350; }
+  68.750% { left:61.854%; top:-10.244%; opacity:0.350; }
+  69.271% { left:62.480%; top:-10.271%; opacity:0.350; }
+  69.791% { left:63.105%; top:-10.280%; opacity:0.350; }
+  70.312% { left:63.734%; top:-10.262%; opacity:0.350; }
+  70.834% { left:64.360%; top:-10.229%; opacity:0.350; }
+  71.354% { left:64.985%; top:-10.179%; opacity:0.350; }
+  71.875% { left:65.614%; top:-10.101%; opacity:0.350; }
+  72.396% { left:66.241%; top:-10.006%; opacity:0.350; }
+  72.916% { left:66.864%; top:-9.884%; opacity:0.350; }
+  73.438% { left:67.489%; top:-9.741%; opacity:0.350; }
+  73.959% { left:68.116%; top:-9.562%; opacity:0.350; }
+  74.479% { left:68.738%; top:-9.375%; opacity:0.350; }
+  75.000% { left:69.358%; top:-9.149%; opacity:0.350; }
+  75.521% { left:69.979%; top:-8.904%; opacity:0.350; }
+  76.041% { left:70.597%; top:-8.634%; opacity:0.350; }
+  76.562% { left:71.217%; top:-8.345%; opacity:0.350; }
+  77.084% { left:71.837%; top:-8.026%; opacity:0.350; }
+  77.604% { left:72.451%; top:-7.682%; opacity:0.350; }
+  78.125% { left:73.065%; top:-7.319%; opacity:0.350; }
+  78.646% { left:73.680%; top:-6.928%; opacity:0.350; }
+  79.166% { left:74.288%; top:-6.524%; opacity:0.350; }
+  79.688% { left:74.896%; top:-6.102%; opacity:0.350; }
+  80.209% { left:75.503%; top:-5.648%; opacity:0.350; }
+  80.729% { left:76.110%; top:-5.173%; opacity:0.350; }
+  81.250% { left:76.713%; top:-4.691%; opacity:0.350; }
+  81.771% { left:77.313%; top:-4.181%; opacity:0.350; }
+  82.291% { left:77.911%; top:-3.655%; opacity:0.350; }
+  82.812% { left:78.509%; top:-3.102%; opacity:0.350; }
+  83.334% { left:79.104%; top:-2.532%; opacity:0.350; }
+  83.854% { left:79.695%; top:-1.947%; opacity:0.350; }
+  84.375% { left:80.284%; top:-1.331%; opacity:0.350; }
+  84.896% { left:80.873%; top:-0.686%; opacity:0.350; }
+  85.416% { left:81.454%; top:-0.027%; opacity:0.350; }
+  85.938% { left:82.031%; top:0.663%; opacity:0.350; }
+  86.459% { left:82.605%; top:1.385%; opacity:0.350; }
+  86.979% { left:83.175%; top:2.133%; opacity:0.350; }
+  87.500% { left:83.737%; top:2.913%; opacity:0.350; }
+  88.021% { left:84.300%; top:3.725%; opacity:0.350; }
+  88.541% { left:84.854%; top:4.562%; opacity:0.350; }
+  89.062% { left:85.400%; top:5.434%; opacity:0.350; }
+  89.584% { left:85.941%; top:6.347%; opacity:0.350; }
+  90.104% { left:86.475%; top:7.276%; opacity:0.350; }
+  90.625% { left:87.000%; top:8.252%; opacity:0.350; }
+  91.146% { left:87.520%; top:9.272%; opacity:0.349; }
+  91.666% { left:88.027%; top:10.318%; opacity:0.342; }
+  92.188% { left:88.526%; top:11.395%; opacity:0.317; }
+  92.709% { left:89.018%; top:12.511%; opacity:0.277; }
+  93.229% { left:89.494%; top:13.672%; opacity:0.229; }
+  93.750% { left:89.962%; top:14.856%; opacity:0.175; }
+  94.271% { left:90.424%; top:16.085%; opacity:0.121; }
+  94.791% { left:90.833%; top:17.237%; opacity:0.073; }
+  95.312% { left:91.042%; top:17.857%; opacity:0.033; }
+  95.834% { left:91.042%; top:17.857%; opacity:0.008; }
+  96.354% { left:91.042%; top:17.857%; opacity:0.000; }
+  96.875% { left:91.042%; top:17.857%; opacity:0.000; }
+  97.396% { left:91.042%; top:17.857%; opacity:0.000; }
+  97.916% { left:91.042%; top:17.857%; opacity:0.000; }
+  98.438% { left:91.042%; top:17.857%; opacity:0.000; }
+  98.959% { left:91.042%; top:17.857%; opacity:0.000; }
+  99.479% { left:91.042%; top:17.857%; opacity:0.000; }
+}
+/* hdr-fox-route:end */
+@media (max-width:900px){ .hdr { display:none; } }   /* narrow screens show the Trailblazer art with Fennick in it */
+@media (prefers-reduced-motion:reduce){
+  /* The -still files are one frame, shown at full size with no animation. Fennick sits on the left bough. */
+  .hdr-layer img, .ftr-layer img { width:100%; height:100%; animation:none; translate:none; transform:none; }
+  /* Stars: piece a shows the still, fully on; b and the sparks are hidden; the canopies stop swaying. */
+  .hdr-stars-a { animation:none; opacity:1; }
+  .hdr-stars-b, .hdr-trail { display:none; }
+  .hdr-canopy { animation:none; transform:none; }
+  /* Fennick sits on the left bough at banner x640 (route row t 2.46 s: paw y 12, css_scale .5556, mid layer). */
+  .hdr-fox { animation:none; left:calc((640 - 192) / 1920 * 100%); top:calc((12 - 266) / 672 * 100%);
+    transform:scale(.5556); opacity:1; z-index:3; }
+}
+
+/* ===== Marsh footer ================================================================================
+   A full-width marsh scene at the bottom of every page: roots, ground, water and grass, with the legal text set
+   on the soil band underneath. It ends the page, so at the very bottom it lines up with the bottom caps of the
+   side strips (they are drawn to end in the same soil colour, --ftr-soil).
+
+   The art is one plate (1920x640 at 1x) plus animated overlays that use the same sprite rule as the header
+   (the --hdr-* variables above: grid columns/rows, passes per cycle, frame shape). The footer has its own
+   clock, --ftr-cycle, passed to that rule as --hdr-cycle. Positions are in plate pixels turned into %.
+   On narrow screens the art keeps a minimum width of 1100px and is centred, so phones see the middle of the
+   scene at a readable size instead of a thin strip. All footer images are lazy-loaded.
+   ================================================================================================== */
+.ftr { --ftr-cycle:7s; --hdr-cycle:var(--ftr-cycle); --ftr-soil:#2a1e14;
+  --ftr-w:max(100%, 1100px);                      /* drawn width of the plate */
+  position:relative; overflow:hidden; background:var(--ftr-soil); color:var(--cream);
+  margin:0; border:0; padding:calc(var(--ftr-w) * 300 / 1920) 16px 28px; }   /* text starts where the soil starts */
+.ftr-art { position:absolute; top:0; left:50%; width:var(--ftr-w); aspect-ratio:1920 / 640; translate:-50% 0; pointer-events:none; }
+.ftr-plate   { --hdr-cols:1; --hdr-frames:1; --hdr-reps:1; --hdr-ar:1920 / 640; left:0; top:0; width:100%; }
+.ftr-water   { --hdr-cols:4; --hdr-frames:4; --hdr-reps:4; --hdr-ar:1920 / 60;  left:0; top:calc(236 / 640 * 100%); width:100%; }
+.ftr-grass   { --hdr-cols:6; --hdr-frames:6; --hdr-reps:2; --hdr-ar:1920 / 220; left:0; top:calc(20 / 640 * 100%); width:100%; }
+/* Fennick chasing a frog, behind the grass. Frames are 480x200; the grid is variables only, so a longer sheet
+   (now 32 frames as 8 x 4: steps(8) along each row x 4 rows = all 32 cells in 4 s) needs just these numbers changed: --hdr-cols, --hdr-rows, --hdr-frames. */
+.ftr-fox     { --hdr-cols:8; --hdr-rows:4; --hdr-frames:32; --hdr-reps:1; --hdr-ar:480 / 200;
+  left:calc(700 / 1920 * 100%); top:calc(40 / 640 * 100%); width:calc(480 / 1920 * 100%); }
+.ftr-insects { --hdr-cols:8; --hdr-frames:8; --hdr-reps:2; --hdr-ar:1180 / 260;   /* a 1180x260 crop at x380 y40 */
+  left:calc(380 / 1920 * 100%); top:calc(40 / 640 * 100%); width:calc(1180 / 1920 * 100%); }
+/* Footer timing. One clock, --ftr-cycle (7 s, was 4 s: a calmer pace), drives every footer layer, and each layer
+   repeats a whole number of times per cycle (--hdr-reps), so 0% and 100% are the same picture for all of them.
+   The fox sheet holds two chases (frames 1-16 and 17-32, 3.5 s each); in each one he leaps on frames 3-7 and
+   lands on frames 8-10. The dragonfly now flies one pass per chase (reps 2), and a negative delay
+   (start part-way through, so no first cycle looks different) puts its first frame, the one nearest the frog's
+   lily pad (plate x ~1065), on the fox's landing frame: frame 8 starts 7/16 into a chase, so the dragonfly is
+   shifted by 9/16 of a chase (7/16 + 9/16 = one whole pass, back to its frame 1).
+   The grass is phased the same way so its rest pose (frame 4 of 6, the frame closest to ftr-grass-still) is
+   what shows at 0% and 100%.
+   The delays are written out in seconds so the seam check can read them; if --ftr-cycle changes, redo them:
+   one pass = 7 s / 2 = 3.5 s, so dragonfly 3.5 x 9/16 = 1.96875 s and grass 3.5 x 3/6 = 1.75 s. */
+.ftr-insects img { animation-delay:-1.96875s; }
+.ftr-grass img   { animation-delay:-1.75s; }
+/* Phones (600px and narrower): the art is drawn at 1x (1920px wide, centred, so the middle of the scene shows)
+   and the plate is Artzy's 1100x640 centre crop (ftr-plate-mobile, a smaller download), placed at x410 so it
+   lines up with the animated layers, which keep their full-plate positions. */
+@media (max-width:600px){
+  .ftr { --ftr-w:1920px; }
+  .ftr-plate { --hdr-ar:1100 / 640; left:calc(410 / 1920 * 100%); width:calc(1100 / 1920 * 100%); }
+}
+/* The text: a soft dark backing keeps it at WCAG AA contrast whatever the soil art looks like. */
+.ftr-text { position:relative; max-width:900px; margin:0 auto; padding:12px 20px; font-size:.92rem;
+  background:rgba(14,10,6,.62); border-radius:6px; }
+.ftr-text p { margin:.5em 0; }
+
+/* ===== Scroll cameos ================================================================================
+   Now and then Fennick slips through the side foliage while you scroll: a short clip (cameo-fox, 24 frames in
+   3 s) in the edge layer, with a static clump of leaves (cameo-leaves) in front so he enters and leaves behind
+   them. site/assets/cameo.js decides when and where (only one Fennick at a time: never while the header is on
+   screen, at most one per 15-20 s of scrolling, alternating sides) and adds the element; CSS only plays it.
+   The clip plays once; its first and last frames are empty (he is behind the leaves), and the script removes
+   the element when the clip ends, so nothing snaps. No cameos without JavaScript, with reduced motion, or at
+   900px and narrower (the edge layer is hidden there anyway).
+   ================================================================================================== */
+.cameo { position:absolute; left:0; width:100%; aspect-ratio:1; overflow:hidden; pointer-events:none; }
+.px-right .cameo { transform:scaleX(-1); }            /* drawn for the left side, mirrored on the right */
+.cameo-clip { position:absolute; inset:0; overflow:hidden; --hdr-cols:8; --hdr-rows:3; --hdr-frames:24; --hdr-reps:1; --hdr-cycle:3.75s; }   /* was 3s; CLIP_MS in cameo.js must match */
+.cameo-clip img { display:block; max-width:none; width:calc(var(--hdr-cols) * 100%); height:calc(var(--hdr-rows) * 100%);
+  animation:hdr-cols calc(var(--hdr-cycle) / var(--hdr-reps) / var(--hdr-rows)) steps(var(--hdr-cols)) var(--hdr-rows),
+            hdr-rows calc(var(--hdr-cycle) / var(--hdr-reps)) steps(var(--hdr-rows)) 1; }
+.cameo-leaves { position:absolute; inset:0; width:100%; height:100%; }
+.cameo-on .hdr-fox { visibility:hidden; }             /* belt and braces: only one Fennick on screen */
+@media (max-width:900px), (prefers-reduced-motion:reduce) { .cameo { display:none; } }
+
+/* Ambient sound toggle: a small round button on the banner's top-right corner. It ships with the hidden attribute
+   and ambient.js removes it, so without JavaScript there is no button that does nothing. */
+.amb-toggle { position:absolute; top:10px; right:10px; z-index:10;   /* above every header layer */ width:44px; height:44px; padding:0; border-radius:50%;
+  display:grid; place-items:center; background:rgba(6,42,48,.78); color:var(--gold); border:1px solid var(--gold); cursor:pointer; }
+.amb-toggle[hidden] { display:none; }
+.amb-toggle:hover, .amb-toggle:focus-visible { background:var(--teal); outline:2px solid var(--lgold); outline-offset:2px; }
+.amb-toggle svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.amb-toggle .amb-waves { display:none; }                 /* sound waves only while it's on */
+.amb-toggle[aria-pressed="true"] .amb-waves { display:inline; }
+.amb-toggle[aria-pressed="true"] .amb-off { display:none; }   /* the cross only while it's off */
 .hero-title { position:absolute; left:62%; top:24%; margin:0; font-family:"Cinzel",serif; font-weight:700;
   font-size:clamp(28px,4.6vw,64px); line-height:1.05; color:var(--lgold); letter-spacing:.02em; text-align:left;
   text-shadow:0 3px 10px rgba(0,0,0,.55); }
@@ -171,13 +1274,159 @@ body { overflow:hidden; }                 /* the page itself no longer scrolls; 
 /* Narrow screens: the side art would cover text, so it goes away and the page scrolls normally. */
 @media (max-width:900px){
   .px-front { display:none; }
+  .hero-art { transform:none; margin-top:0; }   /* no edge layer here, so the banner just scrolls with the page */
   .px-back { transform:none; height:100%; }
 }
-/* Reduced motion: no parallax, no animation. Everything is drawn flat and still. */
+/* Reduced motion: I keep a gentler parallax instead of switching it off, because the layers only move while you
+   scroll yourself (they never move on their own), and that small depth effect is part of the look. What I turn off
+   is everything that moves by itself: the critters, the header animation and the banner shimmer, plus smooth scrolling.
+   The speeds come from the same formula as above (scale = 1 - z / perspective, speed = 1 / scale), just with
+   smaller Z offsets, so the layers drift apart much less:
+     back:  z = -0.176px -> scale 1.176 -> moves at 0.85x
+     front: z =  0.107px -> scale 0.893 -> moves at 1.12x
+   Only the variables change here, so the height maths in the rules above keeps working. No transitions or easing
+   are involved; the layers follow the scroll position directly. The 900px rule above still hides the edge art and
+   flattens the back layer on narrow screens. */
 @media (prefers-reduced-motion:reduce){
-  .px { perspective:none; scroll-behavior:auto; }
-  .px-layer { transform:none !important; will-change:auto; }
-  .px-front, .px-back { height:100%; }
-  .px-fox { animation:none; transform:none; }
+  :root { --px-back-z:-0.176px; --px-back-scale:1.176; --px-front-z:0.107px; --px-front-scale:0.893; }
+  .px { scroll-behavior:auto; }
   .hero::after { animation:none; background:var(--gold); opacity:.5; }
 }
+
+/* ===================================================================================================
+   Marsh side elements: small animated wisps and dragonflies scattered beside the content at irregular heights,
+   scrolling with the front edge layer. Pure CSS. Their places come from tools/wisp_placement.py (seeded, so the
+   layout is the same on every run): left and right are independent, at least 180px apart on each side, and every
+   section gets at least one.
+
+   Why they sit inside each section instead of inside the edge layer:
+   The edge layer moves faster than the content (1.33x, or 1.12x with reduced motion), so a critter placed
+   in the edge layer at the section's position drifts away from that section as you scroll. To line them up
+   I would need each section's height, which CSS can't know and which changes whenever the text changes.
+   So instead each section holds an anchor (.mx-anchor) that covers it. Each critter (.mx-slot) hangs off that
+   anchor at its own offset from the section's top, pushed sideways to the window edge, and gets the *same* translateZ and scale as the
+   edge layer. That gives it the same speed as the foliage, and its position follows the section wherever the
+   section ends up, so changing the content never breaks the alignment.
+
+   When does it line up? With the scale trick, a layer looks exactly in its normal place at the moment its
+   transform-origin reaches the top of the window. I set the origin 35vh above the slot, so each critter sits
+   right at its spot in the section when that spot is about a third of the way down the screen, and it slides past a little faster than the text before and after that.
+
+   For the 3D to reach the anchors, every box between the scene and the anchor keeps transform-style:
+   preserve-3d. If one of them ever gets overflow:hidden, opacity or a filter, the critters inside it go flat
+   and scroll at 1x (still visible, just without the depth).
+
+   Art: each critter is one horizontal sprite sheet (all frames side by side). Frame size and frame count live
+   in the variables below; CSS steps() jumps from frame to frame. Right-side slots use the "-right" sheets
+   (the dragonfly drawn facing the content); the wisp is symmetric and uses one sheet. Every sheet comes as
+   WebP (with an @2x for sharp screens) plus a PNG fallback, chosen by the <picture> around each <img>.
+   Frame 1 (the left end of the sheet) is the still for reduced motion.
+   =================================================================================================== */
+/* Pace: wisps pulse once every 3.2 s (was 1.6 s, which read as flicker); dragonfly wings beat every 0.5 s (was 0.4 s). */
+.mx-wisp-sm   { --mx-fw:40;  --mx-fh:40;  --mx-frames:8; --mx-dur:3.2s; --mx-w:min(36px,  calc(var(--px-edge-w) - 12px)); }
+.mx-wisp      { --mx-fw:64;  --mx-fh:64;  --mx-frames:8; --mx-dur:3.2s; --mx-w:min(56px,  calc(var(--px-edge-w) - 12px)); }
+.mx-wisp-lg   { --mx-fw:96;  --mx-fh:96;  --mx-frames:8; --mx-dur:3.2s; --mx-w:min(84px,  calc(var(--px-edge-w) - 12px)); }
+.mx-dragonfly { --mx-fw:96;  --mx-fh:64;  --mx-frames:4; --mx-dur:.5s;  --mx-w:min(84px,  calc(var(--px-edge-w) - 12px)); }
+
+.px-mid, .px-mid > .hero, .px-mid > .panel, .panel > section, .panel section > article { transform-style:preserve-3d; }
+.mx-anchor { position:absolute; inset:0; pointer-events:none; transform-style:preserve-3d; }  /* covers its whole unit */
+.panel, .panel > section { position:relative; }   /* so each anchor can cover exactly its own section */
+/* The intro anchor sits in the panel itself and so covers the whole panel; its offsets only use the intro part. */
+/* mx-y:begin (generated by tools/wisp_placement.py, do not edit by hand) */
+.mx-y0 { --mx-y:0px; }
+.mx-y20 { --mx-y:20px; }
+.mx-y40 { --mx-y:40px; }
+.mx-y60 { --mx-y:60px; }
+.mx-y80 { --mx-y:80px; }
+.mx-y100 { --mx-y:100px; }
+.mx-y120 { --mx-y:120px; }
+.mx-y180 { --mx-y:180px; }
+.mx-y260 { --mx-y:260px; }
+.mx-y340 { --mx-y:340px; }
+.mx-y360 { --mx-y:360px; }
+.mx-y380 { --mx-y:380px; }
+.mx-y400 { --mx-y:400px; }
+.mx-y420 { --mx-y:420px; }
+.mx-y460 { --mx-y:460px; }
+.mx-y500 { --mx-y:500px; }
+.mx-y520 { --mx-y:520px; }
+.mx-y560 { --mx-y:560px; }
+.mx-y580 { --mx-y:580px; }
+.mx-y600 { --mx-y:600px; }
+.mx-y620 { --mx-y:620px; }
+.mx-y700 { --mx-y:700px; }
+.mx-y720 { --mx-y:720px; }
+.mx-y760 { --mx-y:760px; }
+.mx-y780 { --mx-y:780px; }
+.mx-y800 { --mx-y:800px; }
+.mx-y840 { --mx-y:840px; }
+.mx-y880 { --mx-y:880px; }
+.mx-y900 { --mx-y:900px; }
+.mx-y920 { --mx-y:920px; }
+.mx-y940 { --mx-y:940px; }
+.mx-y960 { --mx-y:960px; }
+.mx-y980 { --mx-y:980px; }
+.mx-y1020 { --mx-y:1020px; }
+.mx-y1100 { --mx-y:1100px; }
+.mx-y1160 { --mx-y:1160px; }
+.mx-y1180 { --mx-y:1180px; }
+.mx-y1200 { --mx-y:1200px; }
+.mx-y1420 { --mx-y:1420px; }
+.mx-y1540 { --mx-y:1540px; }
+.mx-y1660 { --mx-y:1660px; }
+.mx-y1960 { --mx-y:1960px; }
+.mx-y2040 { --mx-y:2040px; }
+.mx-y2200 { --mx-y:2200px; }
+.mx-y2480 { --mx-y:2480px; }
+.mx-y2780 { --mx-y:2780px; }
+.mx-y2820 { --mx-y:2820px; }
+.mx-y3140 { --mx-y:3140px; }
+.mx-y3240 { --mx-y:3240px; }
+.mx-y3560 { --mx-y:3560px; }
+.mx-y3580 { --mx-y:3580px; }
+.mx-y3820 { --mx-y:3820px; }
+.mx-y4020 { --mx-y:4020px; }
+.mx-y4320 { --mx-y:4320px; }
+.mx-y4600 { --mx-y:4600px; }
+.mx-y4900 { --mx-y:4900px; }
+.mx-y5160 { --mx-y:5160px; }
+.mx-y5280 { --mx-y:5280px; }
+.mx-y5560 { --mx-y:5560px; }
+.mx-y5760 { --mx-y:5760px; }
+.mx-y5800 { --mx-y:5800px; }
+.mx-y6120 { --mx-y:6120px; }
+.mx-y6160 { --mx-y:6160px; }
+.mx-y6440 { --mx-y:6440px; }
+.mx-y6600 { --mx-y:6600px; }
+.mx-y6820 { --mx-y:6820px; }
+/* mx-y:end */
+/* Start phase of each critter's loop, in eighths (see the animation-delay on .mx-slot img) */
+.mx-ph1{--mx-ph:1} .mx-ph2{--mx-ph:2} .mx-ph3{--mx-ph:3} .mx-ph4{--mx-ph:4} .mx-ph5{--mx-ph:5} .mx-ph6{--mx-ph:6} .mx-ph7{--mx-ph:7}
+.mx-slot {
+  /* --mx-y is this critter's offset from the top of its section (from the generated mx-y classes). min() keeps it
+     inside the section if the section ever gets shorter than when the offsets were generated. */
+  position:absolute; top:min(var(--mx-y, 0px), calc(100% - 60px)); width:var(--mx-w); aspect-ratio:var(--mx-fw) / var(--mx-fh);
+  overflow:hidden;            /* shows one frame of the sheet at a time */
+  pointer-events:none; z-index:3;
+  transform:translate3d(0,0,var(--px-front-z)) scale(var(--px-front-scale));
+}
+/* The anchor is as wide as the centred text column, so 50% - 50vw is the window's left edge. The origin's x is
+   the middle of the window (same as the perspective origin) so the scale only shrinks things towards the centre
+   line and the critter stays at the window edge; the origin's y is the 35vh explained above. */
+.mx-left  { left:calc(50% - 50vw + 6px);  transform-origin:calc(50vw - 6px) -35vh; }
+.mx-right { right:calc(50% - 50vw + 6px); transform-origin:calc(var(--mx-w) + 6px - 50vw) -35vh; }
+.mx-slot img {
+  display:block; width:calc(var(--mx-frames) * 100%); height:100%; max-width:none;
+  animation:mx-frames var(--mx-dur) steps(var(--mx-frames)) infinite;
+  /* A negative delay starts the loop part-way through, so neighbouring critters don't flap in unison. The phase
+     (0-7 eighths of a loop) comes from the generated mx-ph classes. A negative delay never pops: the loop is
+     simply already running when the critter appears. */
+  animation-delay:calc(var(--mx-dur) * var(--mx-ph, 0) / -8);
+}
+/* translateX(-100%) is the whole sheet; steps(N) stops at 0, 1/N, 2/N ... so each step shows the next frame */
+@keyframes mx-frames { to { transform:translateX(-100%); } }
+
+@media (max-width:900px){ .mx-anchor { display:none; } }
+/* Reduced motion: the slot keeps the gentle edge speed (it reads the same --px-front-* variables), but the
+   critter itself stands still. With no animation the sheet sits at translateX(0), which is exactly frame 1. */
+@media (prefers-reduced-motion:reduce){ .mx-slot img { animation:none; transform:none; } }
