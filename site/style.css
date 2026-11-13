@@ -9,6 +9,26 @@ img { max-width:100%; height:auto; }
 .skip:focus { left:8px; }
 .hero { max-width:1100px; margin:24px auto 0; text-align:center; padding:0 16px; }
 .banner { display:block; width:100%; border:1px solid var(--gold); }
+
+/* Hero: the Trailblazer art has empty space on the right; the wordmark and tagline sit there as real text in Cinzel.
+   Fennick is painted on the banner. There is no separate or animated header fox. */
+.hero-art { position:relative; }
+.hero-title { position:absolute; left:62%; top:24%; margin:0; font-family:"Cinzel",serif; font-weight:700;
+  font-size:clamp(28px,4.6vw,64px); line-height:1.05; color:var(--lgold); letter-spacing:.02em; text-align:left;
+  text-shadow:0 3px 10px rgba(0,0,0,.55); }
+.hero-title span { display:block; color:var(--gold); }
+.hero-tagline { position:absolute; left:62%; top:66%; margin:0; padding-top:10px; border-top:2px solid var(--gold);
+  font-family:"Cinzel",serif; font-weight:700; font-size:clamp(13px,1.4vw,20px); color:var(--cream);
+  text-shadow:0 2px 6px rgba(0,0,0,.6); }
+/* Phones: the 4:3 mobile art has no text, and its bottom band fades into the page colour. The wordmark sits on that band. */
+@media (max-width:600px) {
+  .banner { aspect-ratio:4/3; object-fit:cover; }
+  .hero-title { left:0; right:0; top:auto; bottom:13%; text-align:center; font-size:clamp(26px,8.4vw,44px); }
+  .hero-title span { display:inline; }
+  .hero-tagline { left:50%; top:auto; bottom:3%; transform:translateX(-50%); white-space:nowrap;
+    padding-top:6px; font-size:clamp(12px,3.6vw,17px); }
+}
+
 .lede { font-size:1.2rem; max-width:680px; margin:18px auto 10px; }
 .tag { margin:6px 0 0; color:var(--lgold); font-style:italic; }
 .cta { margin:14px 0; }
@@ -39,6 +59,7 @@ a:focus-visible, .btn:focus-visible { outline:2px solid var(--lgold); outline-of
 .badge { font-family:Georgia, serif; font-size:.78rem; border:1px solid rgba(212,166,74,.6); padding:0 7px; color:var(--cream); font-weight:400; }
 .badge.req { background:var(--gold); color:var(--dteal); font-weight:700; }
 .badge.mock { background:var(--amber); color:var(--dteal); border-color:var(--amber); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+.badge.soon { background:var(--amber); color:var(--dteal); border-color:var(--lgold); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
 .ver { font-family:Georgia, serif; font-size:.85rem; color:var(--lgold); font-weight:400; }
 code { background:var(--teal); padding:1px 5px; border:1px solid var(--edge); }
 footer { margin-top:28px; border-top:1px solid var(--edge); padding-top:8px; }
@@ -57,3 +78,7 @@ table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
 .compat thead th { font-family:"Cinzel", Georgia, serif; color:var(--gold); background:var(--teal); }
 .compat tbody th { color:var(--cream); font-weight:700; }
 .compat tr:target { outline:2px solid var(--lgold); }
+
+@media (prefers-reduced-motion:reduce){
+  html { scroll-behavior:auto; }
+}

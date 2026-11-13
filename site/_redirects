@@ -1,0 +1,10 @@
+# Old add-on and compatibility pages are off the site for now. Send bookmarks home (temporary, 302).
+/addons/beast-core.html        /    302
+/addons/guidepost.html         /    302
+/addons/rest.html              /    302
+/addons/reputation.html        /    302
+/addons/merchants-favor.html   /    302
+/addons/trailmarks.html        /    302
+/addons/cartographer.html      /    302
+/addons/*                      /    302
+/compatibility.html            /    302
