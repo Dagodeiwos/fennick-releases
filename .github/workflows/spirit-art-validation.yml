@@ -10,6 +10,7 @@ permissions:
 jobs:
   artwork:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y librsvg2-bin
@@ -30,6 +31,7 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
           python -m http.server 8765 --directory site >/tmp/fennick-http.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://localhost:8765/ >/dev/null && break; sleep 1; done
           python - <<'PY'
           from playwright.sync_api import sync_playwright
           with sync_playwright() as p:
