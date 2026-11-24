@@ -1,5 +1,5 @@
 @font-face { font-family:"Cinzel"; src:url("/assets/fonts/Cinzel-wght.woff2") format("woff2"); font-weight:400 900; font-style:normal; font-display:swap; }
-:root { --teal:#0E4A55; --dteal:#08343C; --deep:#062a30; --gold:#D4A64A; --lgold:#F0D08A; --amber:#E0953A; --cream:#F6E6C8; --edge:rgba(212,166,74,.35); }
+:root { --teal:#193D35; --dteal:#202C29; --deep:#14191B; --gold:#D6B66C; --lgold:#F0D9A0; --amber:#83BFA7; --cream:#E3D8BB; --edge:rgba(214,182,108,.35); }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { margin:0; background:var(--deep); color:var(--cream); font:17px/1.65 Georgia, "Times New Roman", serif; }
@@ -82,3 +82,13 @@ table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
 @media (prefers-reduced-motion:reduce){
   html { scroll-behavior:auto; }
 }
+
+/* Spirit beast identity; no animation or external requests. */
+.hero-art { border:1px solid #80633d; background:radial-gradient(ellipse at 78% 45%,#38675a 0%,#193d35 35%,#14191b 78%); min-height:340px; overflow:hidden; }
+.spirit-landscape { display:flex; align-items:center; justify-content:flex-end; min-height:340px; padding:32px 9%; background:repeating-radial-gradient(ellipse at 78% 50%,transparent 0 48px,rgba(214,182,108,.08) 49px 50px,transparent 51px 74px); }
+.spirit-landscape img { width:clamp(140px,25vw,240px); filter:drop-shadow(0 0 22px #83bfa744); }
+.hero-title { left:7%; top:24%; }
+.hero-tagline { left:7%; top:66%; }
+.panel { border-color:#80633d; }
+.btn-big { background:#d6b66c; color:#14191b; }
+@media(max-width:600px){ .hero-art { min-height:350px; } .spirit-landscape { min-height:350px; justify-content:center; align-items:flex-start; padding:24px; } .hero-title { left:0; right:0; top:auto; bottom:17%; } .hero-tagline { left:50%; top:auto; bottom:5%; } }
