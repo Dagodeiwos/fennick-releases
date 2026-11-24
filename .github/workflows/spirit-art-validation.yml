@@ -26,16 +26,11 @@ jobs:
               ET.parse(Path('site/assets') / name)
           assert len(ET.parse('site/assets/spirit-icons.svg').getroot()) == 9
           PY
-      - name: Export public branding bytes for repository integration
+      - name: Verify committed raster branding
         run: |
-          python - <<'PY'
-          import base64
-          from pathlib import Path
-          for name in ('spirit-social.png', 'apple-touch-icon.png', 'favicon-32.png'):
-              encoded = base64.b64encode((Path('preview') / name).read_bytes()).decode('ascii')
-              for i in range(0, len(encoded), 1000):
-                  print(f'BRANDING:{name}:{i}:{encoded[i:i+1000]}')
-          PY
+          cmp preview/spirit-social.png site/assets/og/spirit-social.png
+          cmp preview/apple-touch-icon.png site/assets/apple-touch-icon.png
+          cmp preview/favicon-32.png site/assets/favicon-32.png
       - name: Browser layout checks
         run: |
           python -m pip install playwright
@@ -60,6 +55,9 @@ jobs:
                   assert title and tagline
                   assert title["y"] + title["height"] <= tagline["y"] + 1, width
                   assert page.locator(".artifact-icon use").get_attribute("href") == "/assets/spirit-icons.svg#market"
+                  for asset in ("og/spirit-social.png", "apple-touch-icon.png", "favicon-32.png"):
+                      assert page.request.get("http://localhost:8765/assets/" + asset).ok, asset
+                  assert page.locator('meta[property="og:image"]').get_attribute("content").endswith("/assets/og/spirit-social.png")
                   assert not errors, errors
                   page.screenshot(path=f"preview/site-{width}.png", full_page=True)
                   page.close()
