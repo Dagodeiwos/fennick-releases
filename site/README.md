@@ -3,7 +3,7 @@
 This folder is the whole site: static HTML, one style sheet and images. There is no build step and the site has no scripts of its own. Cloudflare serves the folder as static assets (see `wrangler.jsonc` in the public repo).
 
 - The homepage features Market Advisor as Coming soon. There is no download button or link.
-- The header uses the Trailblazer banner (Fennick painted on the art, plus an HTML wordmark). There is no animated header fox.
+- The header uses the spirit fox SVG emblem, jade/bronze palette and HTML wordmark. No animated header fox. The cinematic raster hero is pending integration.
 - The other add-on pages are off the site for now. `_redirects` sends those old URLs home so bookmarks do not 404.
 - `_headers` sets the security headers on every response, including a tight Content Security Policy that still allows Cloudflare Web Analytics.
 - `.assetsignore` keeps this README and other notes from being served.
@@ -11,3 +11,7 @@ This folder is the whole site: static HTML, one style sheet and images. There is
 - Bug reports link to https://github.com/Dagodeiwos/fennick-releases/issues.
 
 `.dev` domains are HTTPS-only (HSTS preload).
+
+## Branding assets
+
+`assets/spirit-fox.svg` is the scalable emblem and favicon. `assets/spirit-icons.svg` contains nine reusable artifact symbols. `assets/og/spirit-social.svg` is the social card source. The Spirit artwork validation workflow generates PNG previews; these are not deployed automatically. Preserve the static site and existing security policy.

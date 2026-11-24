@@ -1,0 +1,69 @@
+name: Spirit artwork validation
+on:
+  pull_request:
+    paths:
+      - 'site/**'
+      - '.github/workflows/spirit-art-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  artwork:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y librsvg2-bin
+      - run: |
+          mkdir -p preview
+          rsvg-convert site/assets/og/spirit-social.svg -o preview/spirit-social.png
+          rsvg-convert -w 180 -h 180 site/assets/spirit-fox.svg -o preview/apple-touch-icon.png
+          rsvg-convert -w 32 -h 32 site/assets/spirit-fox.svg -o preview/favicon-32.png
+          python - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          for name in ('spirit-fox.svg', 'spirit-icons.svg', 'og/spirit-social.svg', 'hero/spirit-mountains.svg'):
+              ET.parse(Path('site/assets') / name)
+          assert len(ET.parse('site/assets/spirit-icons.svg').getroot()) == 9
+          PY
+      - name: Verify committed raster branding
+        run: |
+          cmp preview/spirit-social.png site/assets/og/spirit-social.png
+          cmp preview/apple-touch-icon.png site/assets/apple-touch-icon.png
+          cmp preview/favicon-32.png site/assets/favicon-32.png
+      - name: Browser layout checks
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --directory site >/tmp/fennick-http.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://localhost:8765/ >/dev/null && break; sleep 1; done
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              for width in (320, 390, 768, 1440):
+                  page = browser.new_page(viewport={"width":width,"height":900})
+                  errors = []
+                  page.on("response", lambda r: errors.append(r.url) if r.status >= 400 else None)
+                  page.goto("http://localhost:8765/", wait_until="networkidle")
+                  assert page.locator("h1").count() == 1
+                  assert page.locator("#market-advisor").count() == 1
+                  assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), width
+                  assert page.locator(".spirit-landscape img").evaluate("(img) => img.complete && img.naturalWidth > 0")
+                  title = page.locator(".hero-title").bounding_box()
+                  tagline = page.locator(".hero-tagline").bounding_box()
+                  assert title and tagline
+                  assert title["y"] + title["height"] <= tagline["y"] + 1, width
+                  assert page.locator(".artifact-icon use").get_attribute("href") == "/assets/spirit-icons.svg#market"
+                  for asset in ("og/spirit-social.png", "apple-touch-icon.png", "favicon-32.png"):
+                      assert page.request.get("http://localhost:8765/assets/" + asset).ok, asset
+                  assert page.locator('meta[property="og:image"]').get_attribute("content").endswith("/assets/og/spirit-social.png")
+                  assert not errors, errors
+                  page.screenshot(path=f"preview/site-{width}.png", full_page=True)
+                  page.close()
+              browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spirit-branding
+          path: preview/
