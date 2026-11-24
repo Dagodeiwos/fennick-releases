@@ -95,3 +95,6 @@ table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
 
 .artifact-heading { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
 .artifact-icon { width:56px; height:56px; flex:none; }
+
+.spirit-landscape { background:linear-gradient(90deg,rgba(20,25,27,.96),rgba(20,25,27,.55) 50%,rgba(20,25,27,.08)),url("/assets/hero/spirit-mountains.svg") center/cover no-repeat; }
+@media(max-width:600px){ .spirit-landscape { background:linear-gradient(0deg,#14191b 4%,rgba(20,25,27,.15) 70%),url("/assets/hero/spirit-mountains.svg") 75% center/cover no-repeat; } }
