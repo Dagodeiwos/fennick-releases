@@ -1,0 +1,31 @@
+name: Spirit artwork validation
+on:
+  pull_request:
+    paths:
+      - 'site/**'
+      - '.github/workflows/spirit-art-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  artwork:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y librsvg2-bin
+      - run: |
+          mkdir -p preview
+          rsvg-convert site/assets/og/spirit-social.svg -o preview/spirit-social.png
+          rsvg-convert -w 180 -h 180 site/assets/spirit-fox.svg -o preview/apple-touch-icon.png
+          rsvg-convert -w 32 -h 32 site/assets/spirit-fox.svg -o preview/favicon-32.png
+          python - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          for name in ('spirit-fox.svg', 'spirit-icons.svg', 'og/spirit-social.svg'):
+              ET.parse(Path('site/assets') / name)
+          assert len(ET.parse('site/assets/spirit-icons.svg').getroot()) == 9
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spirit-branding
+          path: preview/
