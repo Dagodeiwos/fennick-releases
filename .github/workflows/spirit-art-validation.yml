@@ -26,6 +26,16 @@ jobs:
               ET.parse(Path('site/assets') / name)
           assert len(ET.parse('site/assets/spirit-icons.svg').getroot()) == 9
           PY
+      - name: Export public branding bytes for repository integration
+        run: |
+          python - <<'PY'
+          import base64
+          from pathlib import Path
+          for name in ('spirit-social.png', 'apple-touch-icon.png', 'favicon-32.png'):
+              encoded = base64.b64encode((Path('preview') / name).read_bytes()).decode('ascii')
+              for i in range(0, len(encoded), 1000):
+                  print(f'BRANDING:{name}:{i}:{encoded[i:i+1000]}')
+          PY
       - name: Browser layout checks
         run: |
           python -m pip install playwright
