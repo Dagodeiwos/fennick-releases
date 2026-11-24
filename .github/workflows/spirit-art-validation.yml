@@ -25,6 +25,29 @@ jobs:
               ET.parse(Path('site/assets') / name)
           assert len(ET.parse('site/assets/spirit-icons.svg').getroot()) == 9
           PY
+      - name: Browser layout checks
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          python -m http.server 8765 --directory site >/tmp/fennick-http.log 2>&1 &
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              for width in (320, 390, 768, 1440):
+                  page = browser.new_page(viewport={"width":width,"height":900})
+                  errors = []
+                  page.on("response", lambda r: errors.append(r.url) if r.status >= 400 else None)
+                  page.goto("http://localhost:8765/", wait_until="networkidle")
+                  assert page.locator("h1").count() == 1
+                  assert page.locator("#market-advisor").count() == 1
+                  assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), width
+                  assert page.locator(".spirit-landscape img").evaluate("(img) => img.complete && img.naturalWidth > 0")
+                  assert not errors, errors
+                  page.screenshot(path=f"preview/site-{width}.png", full_page=True)
+                  page.close()
+              browser.close()
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: spirit-branding
