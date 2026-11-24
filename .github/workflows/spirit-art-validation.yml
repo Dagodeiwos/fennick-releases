@@ -22,7 +22,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import xml.etree.ElementTree as ET
-          for name in ('spirit-fox.svg', 'spirit-icons.svg', 'og/spirit-social.svg'):
+          for name in ('spirit-fox.svg', 'spirit-icons.svg', 'og/spirit-social.svg', 'hero/spirit-mountains.svg'):
               ET.parse(Path('site/assets') / name)
           assert len(ET.parse('site/assets/spirit-icons.svg').getroot()) == 9
           PY
