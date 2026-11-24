@@ -92,3 +92,6 @@ table.compat { border-collapse:collapse; width:100%; font-size:.92rem; }
 .panel { border-color:#80633d; }
 .btn-big { background:#d6b66c; color:#14191b; }
 @media(max-width:600px){ .hero-art { min-height:350px; } .spirit-landscape { min-height:350px; justify-content:center; align-items:flex-start; padding:24px; } .hero-title { left:0; right:0; top:auto; bottom:17%; } .hero-tagline { left:50%; top:auto; bottom:5%; } }
+
+.artifact-heading { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.artifact-icon { width:56px; height:56px; flex:none; }
