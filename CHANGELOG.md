@@ -3,6 +3,10 @@
 Suite-wide changes, newest first. Dates are month and year only. Each add-on folder has its own `CHANGELOG.md` with the
 full detail for that add-on.
 
+## November 2026 — suite 2026.11 RC4
+
+- Guidepost 4.7.1 fixes first-load catch-up, the Brakk visit, Razor Hill pickups and the coastal quest chain. Trainer reminders clear after available services are learned.
+
 ## November 2026 — suite 2026.11 RC3
 
 - Find Minerals and Find Herbs now hide matching Fennick minimap pins within 100 yards in Cartographer and standalone Trailmarks. Gathering history stays on the world map. Install Beast Core 1.8.1 with the updated modules.
