@@ -3,6 +3,10 @@
 Suite-wide changes, newest first. Dates are month and year only. Each add-on folder has its own `CHANGELOG.md` with the
 full detail for that add-on.
 
+## November 2026 — suite 2026.11 RC3
+
+- Find Minerals and Find Herbs now hide matching Fennick minimap pins within 100 yards in Cartographer and standalone Trailmarks. Gathering history stays on the world map. Install Beast Core 1.8.1 with the updated modules.
+
 ## November 2026 — suite 2026.11 RC2
 
 - Cartographer 1.2.1 adds a screen-sized square minimap in the upper-right corner, a thin border and separate zone, clock and coordinate labels. The optional button collector wraps beneath the map.
