@@ -3,6 +3,10 @@
 Suite-wide changes, newest first. Dates are month and year only. Each add-on folder has its own `CHANGELOG.md` with the
 full detail for that add-on.
 
+## November 2026 — suite 2026.11 RC5
+
+- Guidepost 4.7.2 adds reviewed Normal dungeon pickups, hidden quest routes and both faction paths to the Cozy Sleeping Bag. Cartographer 1.2.3 reduces repeated pin lookups and filter work while moving.
+
 ## November 2026 — suite 2026.11 RC4
 
 - Guidepost 4.7.1 fixes first-load catch-up, the Brakk visit, Razor Hill pickups and the coastal quest chain. Trainer reminders clear after available services are learned.
