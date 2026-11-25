@@ -3,6 +3,12 @@
 Suite-wide changes, newest first. Dates are month and year only. Each add-on folder has its own `CHANGELOG.md` with the
 full detail for that add-on.
 
+## November 2026 — suite 2026.11 RC1
+
+- Guidepost schedules ready turn-ins before new pickups, including when the log is full. Reviewed endpoints and single-objective locations supplement missing waypoint data.
+- The seven-module player bundle targets WoW Forever interface 16001. The RC identifier distinguishes this package from earlier downloads with the same module manifest versions. In-game testing and full route-data certification are pending.
+- The suite ZIP, individual module ZIPs and checksums are available for testing. Market Advisor is still in development.
+
 ## October 2026: OpenMap support (Cartographer 1.2.0, Trailmarks 1.1.2)
 - Optional compatibility with OpenMap, a seamless world map add-on (MIT, not bundled). With OpenMap installed, the map key opens OpenMap, and Cartographer and Trailmarks draw pins, routes and the planned trip on its view through its public API. No OpenMap code or art is included. Without OpenMap nothing changes.
 
