@@ -1,0 +1,52 @@
+name: Publish suite release candidate
+on:
+  push:
+    branches: [main]
+    paths: ['site/downloads/*.zip.sha256']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: publish-suite-candidate
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check archive and build individual downloads
+        run: |
+          mkdir release-assets
+          checksum=$(ls -v site/downloads/Fennick-Suite-*-rc*.zip.sha256 | tail -1)
+          archive=$(basename "$checksum" .sha256)
+          (cd site/downloads && sha256sum --check "$(basename "$checksum")")
+          cp "site/downloads/$archive" release-assets/
+          cd release-assets
+          python - "$archive" <<'PY'
+          import sys, zipfile
+          from pathlib import Path
+          archive = Path(sys.argv[1])
+          version = archive.stem.removeprefix("Fennick-Suite-")
+          with zipfile.ZipFile(archive) as suite:
+              assert suite.testzip() is None
+              modules = {name.split("/")[0] for name in suite.namelist()}
+              expected = {"BeastCore", "Guidepost", "Rest", "Reputation", "MerchantsFavor", "Trailmarks", "Cartographer"}
+              assert modules == {"Fennick_" + module for module in expected}
+              for module in sorted(modules):
+                  with zipfile.ZipFile(f"{module}-{version}.zip", "w") as addon:
+                      for entry in suite.infolist():
+                          if entry.filename.startswith(module + "/"):
+                              addon.writestr(entry, suite.read(entry))
+          PY
+          sha256sum *.zip > SHA256SUMS.txt
+          echo "VERSION=${archive#Fennick-Suite-}" | sed 's/\.zip$//' >> "$GITHUB_ENV"
+      - name: Publish verified files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="suite-$VERSION"
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --draft --prerelease --target "$GITHUB_SHA" --title "Fennick Suite $VERSION" --notes "WoW Forever interface 16001. Install the suite ZIP or Beast Core plus selected module ZIPs. Extract into _forever_/Interface/AddOns/. In-game testing and full route-data certification are pending. Market Advisor is separate."
+          fi
+          if [ "$(gh release view "$tag" --json isDraft --jq .isDraft)" = true ]; then
+            gh release upload "$tag" release-assets/* --clobber
+            gh release edit "$tag" --draft=false --prerelease
+          fi

@@ -5,7 +5,8 @@ module you can add or leave out. They are not for sale. License: PolyForm Noncom
 add-on folder).
 
 - Website: https://fennickaddons.dev
-- Downloads: https://github.com/Dagodeiwos/fennick-releases/releases
+- [Download the seven-module suite, 2026.11 RC1](https://fennickaddons.dev/downloads/Fennick-Suite-2026.11-rc1.zip) · [Checksum](https://fennickaddons.dev/downloads/Fennick-Suite-2026.11-rc1.zip.sha256)
+- Releases: https://github.com/Dagodeiwos/fennick-releases/releases
 - Bug reports and questions: https://github.com/Dagodeiwos/fennick-releases/issues
 - Version history: `CHANGELOG.md`, and one `CHANGELOG.md` per add-on
 
@@ -14,7 +15,7 @@ add-on folder).
 | Folder | What it does | Requires |
 |---|---|---|
 | `Fennick_BeastCore` | Focus window, waypoint arrow, look, setup, settings, monster tooltip | Nothing |
-| `Fennick_Guidepost` | Leveling guide 1 to 60 with PvE, Hardcore and PvP rulesets | Beast Core |
+| `Fennick_Guidepost` | Normal and Hardcore leveling routes, quest hubs and quest location lookup | Beast Core |
 | `Fennick_Rest` | Rested XP and where to log out | Beast Core |
 | `Fennick_Reputation` | Reputation turn-ins you can do with what is in your bags | Beast Core |
 | `Fennick_MerchantsFavor` | Merchant's Favor crates, labels and writs | Beast Core |
