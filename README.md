@@ -5,7 +5,7 @@ module you can add or leave out. They are not for sale. License: PolyForm Noncom
 add-on folder).
 
 - Website: https://fennickaddons.dev
-- [Download the seven-module suite, 2026.11 RC2](https://fennickaddons.dev/downloads/Fennick-Suite-2026.11-rc2.zip) · [Checksum](https://fennickaddons.dev/downloads/Fennick-Suite-2026.11-rc2.zip.sha256)
+- [Download the seven-module suite, 2026.11 RC3](https://fennickaddons.dev/downloads/Fennick-Suite-2026.11-rc3.zip) · [Checksum](https://fennickaddons.dev/downloads/Fennick-Suite-2026.11-rc3.zip.sha256)
 - Releases: https://github.com/Dagodeiwos/fennick-releases/releases
 - Bug reports and questions: https://github.com/Dagodeiwos/fennick-releases/issues
 - Version history: `CHANGELOG.md`, and one `CHANGELOG.md` per add-on
