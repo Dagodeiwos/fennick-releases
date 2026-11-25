@@ -3,6 +3,10 @@
 Suite-wide changes, newest first. Dates are month and year only. Each add-on folder has its own `CHANGELOG.md` with the
 full detail for that add-on.
 
+## November 2026 — suite 2026.11 RC2
+
+- Cartographer 1.2.1 adds a screen-sized square minimap in the upper-right corner, a thin border and separate zone, clock and coordinate labels. The optional button collector wraps beneath the map.
+
 ## November 2026 — suite 2026.11 RC1
 
 - Guidepost schedules ready turn-ins before new pickups, including when the log is full. Reviewed endpoints and single-objective locations supplement missing waypoint data.
