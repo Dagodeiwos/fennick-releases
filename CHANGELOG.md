@@ -3,6 +3,10 @@
 Suite-wide changes, newest first. Dates are month and year only. Each add-on folder has its own `CHANGELOG.md` with the
 full detail for that add-on.
 
+## November 2026 — suite 2026.11 RC7
+
+- Guidepost 4.8.1 improves quest eligibility, fixes two Wailing Caverns route anchors and removes repeated full-route scans for missing anchors.
+
 ## November 2026 — suite 2026.11 RC6
 
 - Guidepost 4.8.0 bundles early Alliance and late-level Normal quest steps and adds optional Riverglades and Mount Hyjal routes.
