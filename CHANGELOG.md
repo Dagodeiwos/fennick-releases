@@ -3,6 +3,10 @@
 Suite-wide changes, newest first. Dates are month and year only. Each add-on folder has its own `CHANGELOG.md` with the
 full detail for that add-on.
 
+## November 2026 — suite 2026.11 RC8
+
+- Guidepost restores the Westfall investigation, Arugal’s Folly, the Algaz pass, the Menethil and Ashenvale handoffs, and Shimmering Flats prerequisites. Unending Torment starts from the Baron’s item and follows each Undercity objective in order.
+
 ## November 2026 — suite 2026.11 RC7
 
 - Guidepost 4.8.1 improves quest eligibility, fixes two Wailing Caverns route anchors and removes repeated full-route scans for missing anchors.
